@@ -15,9 +15,7 @@ import android.widget.Toast;
 import java.util.Observable;
 import java.util.Observer;
 
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
+import alarmproject.apps.plow.alarmproject.R;
 
 
 public class PrincipalActivity extends Activity implements Observer{

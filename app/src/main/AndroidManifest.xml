@@ -14,10 +14,6 @@
         <receiver android:name=".services.AlarmReceiver" />
 
         <activity
-            android:name=".activities.CalendarActivity"
-            android:label="@string/title_activity_calendar" >
-        </activity>
-        <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_calendar" >
             <intent-filter>
