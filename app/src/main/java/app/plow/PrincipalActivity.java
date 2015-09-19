@@ -15,6 +15,10 @@ import android.widget.Toast;
 import java.util.Observable;
 import java.util.Observer;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 
 public class PrincipalActivity extends Activity implements Observer{
     private static final String TAG = "LEDOnOff";
@@ -46,6 +50,7 @@ public class PrincipalActivity extends Activity implements Observer{
         lamp_yellow.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 lamp_yellow_on = !lamp_yellow_on;
+
                 if (lamp_yellow_on) {
                     sendData("3");
                 } else {
