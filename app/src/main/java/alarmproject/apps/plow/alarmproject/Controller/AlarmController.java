@@ -34,8 +34,11 @@ public class AlarmController  {
 
     public long nextInt()
     {
+        long a;
         try {
-            return realm.where(Alarm.class).maximumInt("id") + 1;
+            a=realm.where(Alarm.class).maximumInt("id") + 1;
+            if (a<0) return 0;
+            return a;
         }catch (Exception e) {
             return 0;
         }
