@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#03a9f4</color>
+    <color name="primary_dark">#0057f4</color>
+    <color name="accent">#232323</color>
+    <color name="gray_background">#757575</color>
+    <color name="yellow">#FFBB33</color>
+    <color name="switch_pink_on">#f93f7e</color>
+    <color name="switch_pink_primary_on">#AAf93f7e</color>
+    <color name="mdtp_accent_color">#03a9f4</color>
+</resources>
