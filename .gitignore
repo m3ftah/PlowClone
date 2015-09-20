@@ -28,3 +28,6 @@ proguard/
 
 #IDE Personnalistion
 .idea/
+
+#App.iml
+app.iml
