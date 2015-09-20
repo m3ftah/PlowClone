@@ -64,7 +64,8 @@ public class BluetoothRC extends Observable  {
     public void onResume(){
         Log.d(TAG, "...In onResume - Attempting client connect...");
         //checkBTState();
-        if (!connected) connect();
+        if (!connected)
+            connect();
 
     }
 
@@ -83,11 +84,19 @@ public class BluetoothRC extends Observable  {
         btAdapter.cancelDiscovery();
         // Establish the connection. This will block until it connects.
         Log.d(TAG, "...Connecting to Remote...");
+        long ref = System.currentTimeMillis();
+        while( System.currentTimeMillis() - ref < 2000) continue;
+        int i = 0;
+        boolean ok = false;
+        while(i<3 &&!ok)
         try {
+            i++;
             btSocket.connect();
+            ok = true;
             Log.d(TAG, "...Connection established and data link opened...");
         } catch (IOException e) {
             problem = true;
+            Log.d(TAG,"close socket during connection failure");
             try {
                 btSocket.close();
             } catch (IOException e2) {
@@ -109,14 +118,14 @@ public class BluetoothRC extends Observable  {
 
     public void onPause(){
         Log.d(TAG, "...In onPause()...");
-
-        if (outStream != null) {
+        connected = false;
+        /*if (outStream != null) {
             try {
                 outStream.flush();
             } catch (IOException e) {
                 Log.d(TAG, "In onPause() and failed to flush output stream: ");
             }
-        }
+        }*/
 
         try {
             btSocket.close();

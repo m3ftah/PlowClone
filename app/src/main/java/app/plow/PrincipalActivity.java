@@ -50,18 +50,15 @@ public class PrincipalActivity extends Activity implements Observer{
                 lamp_yellow_on = !lamp_yellow_on;
 
                 if (lamp_yellow_on) {
-                    sendData("3");
-                } else {
                     sendData("2");
-
+                } else {
+                    sendData("3");
                 }
-
                 Log.d(TAG, "lampe clicked");
                 if (!lamp_yellow_on)
                     lamp_yellow.setImageResource(R.drawable.lamp_off);
                 else
                     lamp_yellow.setImageResource(R.drawable.lamp_yellow);
-
             }
         });
         microphone_btn.setOnClickListener(new OnClickListener() {
@@ -81,10 +78,10 @@ public class PrincipalActivity extends Activity implements Observer{
         blrc.onResume();
         blrc.startListening();
         lamp_yellow_on  = getPreferences(MODE_PRIVATE).getBoolean("led",true);
-        if (!lamp_yellow_on)
+        /*if (!lamp_yellow_on)
             lamp_yellow.setImageResource(R.drawable.lamp_off);
         else
-            lamp_yellow.setImageResource(R.drawable.lamp_yellow);
+            lamp_yellow.setImageResource(R.drawable.lamp_yellow);*/
     }
 
     @Override

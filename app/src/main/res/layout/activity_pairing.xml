@@ -22,16 +22,31 @@
         android:id="@+id/progress"
         android:layout_below="@id/app_logoImage"
         android:layout_centerHorizontal="true"
-        app:pv_autostart="true"
+        app:pv_autostart = "true"
         app:pv_circular="true"
-        app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
+        app:pv_progressStyle="@style/ColorsCircularProgressDrawableStyle"
         app:pv_progressMode="indeterminate"/>
-    <TextView android:text="@string/title_activity_pairing"
+    <TextView android:text="@string/connecting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textColor="@color/yellow"
         android:textSize="30sp"
+        android:id="@+id/textconnecting"
         android:layout_below="@id/progress"/>
+    <com.rey.material.widget.Button
+        style="@style/RaiseWaveColorButtonRippleStyle"
+        android:layout_width="300dp"
+        android:layout_height="@dimen/bt_height"
+        android:layout_marginTop="15dp"
+        android:textColor="#FFFFFFFF"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:layout_gravity="center"
+        app:rd_delayClick="afterRelease"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/retry"
+        app:rd_enable="true"
+        android:text="retry"/>
 
 </RelativeLayout>
