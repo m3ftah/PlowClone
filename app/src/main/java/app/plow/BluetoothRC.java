@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,10 +26,11 @@ public class BluetoothRC extends Observable  {
     private BluetoothSocket btSocket = null;
     private OutputStream outStream = null;
     private InputStream inStream = null;
-    private Activity context = null;
+    private Context context = null;
     private static BluetoothRC instance;
     private AsyncTask task;
     private ArrayList<Observer> observers = new ArrayList<>();
+    private boolean connected = false;
    // Well known SPP UUID
     private static final UUID MY_UUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -37,15 +39,20 @@ public class BluetoothRC extends Observable  {
     private static String address = "20:14:05:06:21:16";
 
 
-    public static BluetoothRC getInstance(Activity context){
+    public static BluetoothRC getInstance(Context context){
         if (BluetoothRC.instance == null){
             BluetoothRC.instance = new BluetoothRC(context);
+        }else{
+            BluetoothRC.instance.context = context;
         }
         return BluetoothRC.instance;
     }
 
-    private BluetoothRC(Activity context){
+    private BluetoothRC(Context context){
         this.context = context;
+        openBluetooth();
+    }
+    public void openBluetooth(){
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!btAdapter.isEnabled()){
             btAdapter.enable();
@@ -57,17 +64,19 @@ public class BluetoothRC extends Observable  {
     public void onResume(){
         Log.d(TAG, "...In onResume - Attempting client connect...");
         //checkBTState();
-        //if (!btAdapter.isEnabled()) btAdapter.enable();
+        if (!connected) connect();
+
+    }
+
+    public boolean connect() {
+        boolean problem = false;
         // Set up a pointer to the remote node using it's address.
         BluetoothDevice device = btAdapter.getRemoteDevice(address);
-        // Two things are needed to make a connection:
-        // A MAC address, which we got above.
-        // A Service ID or UUID. In this case we are using the
-        // UUID for SPP.
         try {
             btSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
         } catch (IOException e) {
             Log.d(TAG, "In onResume() and socket create failed: ");
+            problem = true;
         }
         // Discovery is resource intensive. Make sure it isn't going on
         // when you attempt to connect and pass your message.
@@ -78,6 +87,7 @@ public class BluetoothRC extends Observable  {
             btSocket.connect();
             Log.d(TAG, "...Connection established and data link opened...");
         } catch (IOException e) {
+            problem = true;
             try {
                 btSocket.close();
             } catch (IOException e2) {
@@ -91,8 +101,12 @@ public class BluetoothRC extends Observable  {
             outStream = btSocket.getOutputStream();
         } catch (IOException e) {
             Log.d(TAG,"In onResume() and output stream creation failed:");
+            problem = true;
         }
+        this.connected = true;
+        return !problem;
     }
+
     public void onPause(){
         Log.d(TAG, "...In onPause()...");
 

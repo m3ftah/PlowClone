@@ -1,9 +1,12 @@
 package app.plow;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import alarmproject.apps.plow.alarmproject.R;
 
@@ -13,7 +16,28 @@ public class Pairing extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pairing);
+
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                BluetoothRC blrc = BluetoothRC.getInstance(Pairing.this);
+                if (blrc.connect()){
+                    startActivity(new Intent(Pairing.this, PrincipalActivity.class));
+                }else{
+                    Pairing.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Pairing.this, "Connection echoue", Toast.LENGTH_SHORT).show();
+                            Pairing.this.finish();
+                        }
+                    });
+                }
+                return null;
+            }
+        }.execute();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
