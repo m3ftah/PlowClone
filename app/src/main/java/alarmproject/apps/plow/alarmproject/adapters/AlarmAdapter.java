@@ -13,7 +13,9 @@ import com.rey.material.widget.Switch;
 import alarmproject.apps.plow.alarmproject.Controller.AlarmController;
 import alarmproject.apps.plow.alarmproject.Controller.TimeController;
 import alarmproject.apps.plow.alarmproject.R;
+import alarmproject.apps.plow.alarmproject.activities.MainActivity;
 import alarmproject.apps.plow.alarmproject.model.Alarm;
+import alarmproject.apps.plow.alarmproject.model.Time;
 import alarmproject.apps.plow.alarmproject.model.Utilities;
 
 /**
@@ -45,9 +47,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.MyViewHolder
         holder.isOn.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(Switch aSwitch, boolean b) {
-                mlist.get(position).setIsOn(b);
-                if (b) aSwitch.setAlpha(1);
-                else aSwitch.setAlpha(0.3f);
+                if (b) {
+                    aSwitch.setAlpha(1);
+                }
+                else {
+                    aSwitch.setAlpha(0.3f);
+                }
+                mlist.set(position, MainActivity.alarmController.updateIsOn(b, mlist.get(position).getId()));
+                MainActivity.alarmController.show();
             }
         });
     }

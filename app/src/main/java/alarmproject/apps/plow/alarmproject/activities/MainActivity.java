@@ -18,13 +18,16 @@ import android.widget.Toast;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import alarmproject.apps.plow.alarmproject.Controller.AlarmController;
+import alarmproject.apps.plow.alarmproject.Controller.DateController;
+import alarmproject.apps.plow.alarmproject.Controller.TimeController;
 import alarmproject.apps.plow.alarmproject.Fragments.CalendarFragment;
 import alarmproject.apps.plow.alarmproject.R;
 import alarmproject.apps.plow.alarmproject.model.Alarm;
-import alarmproject.apps.plow.alarmproject.model.Date;
+import alarmproject.apps.plow.alarmproject.model.DateCalendar;
 import alarmproject.apps.plow.alarmproject.model.NavigationDrawerFragment;
 import alarmproject.apps.plow.alarmproject.model.Time;
 
@@ -35,6 +38,9 @@ public class MainActivity extends ActionBarActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    public static DateController dateController;
+    public static AlarmController alarmController;
+    public static TimeController timeController;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -49,6 +55,10 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         ac=this;
+
+        dateController = new DateController(MainActivity.this);
+        alarmController = new AlarmController(MainActivity.this);
+        timeController = new TimeController(MainActivity.this);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -112,10 +122,9 @@ public class MainActivity extends ActionBarActivity
                         @Override
                         public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
                             Alarm al = new Alarm(new Time(i, i1), true);
-                            CalendarFragment.alarms.add(al);
-                            AlarmController alC = new AlarmController(MainActivity.this);
-                            alC.save(al);
-                            alC.show();
+                            CalendarFragment.alarms.add(MainActivity.alarmController.save(al));
+                            MainActivity.alarmController.show();
+                            MainActivity.dateController.addAlarm(CalendarFragment.actualDate,CalendarFragment.alarms.get(CalendarFragment.alarms.size()-1).getId());
                             CalendarFragment.setNotify();
                         }
                     },
@@ -138,14 +147,23 @@ public class MainActivity extends ActionBarActivity
         }
         if (id==R.id.menu_copy)
         {
-            Date.dayToCopy= CalendarFragment.alarms;
+            if (CalendarFragment.alarms==null || CalendarFragment.alarms.isEmpty())
+            {
+                Toast.makeText(getBaseContext(), getString(R.string.toast_date_nothing_copied), Toast.LENGTH_LONG).show();
+                return true;
+            }
+            DateCalendar.dayToCopy = new ArrayList<Long>();
+            for (Alarm a:CalendarFragment.alarms)
+            DateCalendar.dayToCopy.add(a.getId());
+
             m.getItem(2).setVisible(true);
             Toast.makeText(getBaseContext(), getString(R.string.toast_date_copied), Toast.LENGTH_LONG).show();
             return true;
         }
         if (id==R.id.menu_past)
         {
-            CalendarFragment.alarms=Date.dayToCopy;
+            dateController.pasteDay();
+            CalendarFragment.alarms=dateController.getAllAlarmsByDay(CalendarFragment.actualDate);
             CalendarFragment.setNotify();
             return true;
         }

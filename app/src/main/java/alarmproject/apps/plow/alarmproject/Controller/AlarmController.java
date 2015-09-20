@@ -32,6 +32,43 @@ public class AlarmController  {
         return alarm1;
     }
 
+    public Alarm updateTime(Time t,long id)
+    {
+        realm.beginTransaction();
+        RealmQuery<Alarm> query = realm.where(Alarm.class).equalTo("id",id);
+        Alarm results = query.findFirst();
+        results.getTime().setHour(t.getHour());
+        results.getTime().setMinute(t.getMinute());
+        realm.commitTransaction();
+        return results;
+    }
+
+    public Alarm updateIsOn(boolean b,long id)
+    {
+        realm.beginTransaction();
+        RealmQuery<Alarm> query = realm.where(Alarm.class).equalTo("id", id);
+        Alarm results = query.findFirst();
+        results.setIsOn(b);
+        realm.commitTransaction();
+        return results;
+    }
+
+    public void remove(long id)
+    {
+        realm.beginTransaction();
+        RealmQuery<Alarm> query = realm.where(Alarm.class).equalTo("id", id);
+        Alarm results = query.findFirst();
+        results.removeFromRealm();
+        realm.commitTransaction();
+    }
+
+    public Alarm getAlarmById(long id)
+    {
+        RealmQuery<Alarm> query = realm.where(Alarm.class).equalTo("id", id);
+        return query.findFirst();
+    }
+
+
     public long nextInt()
     {
         long a;

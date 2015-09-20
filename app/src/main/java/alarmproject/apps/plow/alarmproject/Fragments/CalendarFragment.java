@@ -17,10 +17,14 @@ import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import alarmproject.apps.plow.alarmproject.Controller.DateController;
 import alarmproject.apps.plow.alarmproject.R;
+import alarmproject.apps.plow.alarmproject.activities.MainActivity;
 import alarmproject.apps.plow.alarmproject.adapters.AlarmAdapter;
 import alarmproject.apps.plow.alarmproject.model.Alarm;
+import alarmproject.apps.plow.alarmproject.model.DateCalendar;
 import alarmproject.apps.plow.alarmproject.model.Time;
 import me.nlmartian.silkcal.DayPickerView;
 import me.nlmartian.silkcal.SimpleMonthAdapter;
@@ -35,6 +39,8 @@ public class CalendarFragment extends Fragment {
 
     public static  ArrayList<Alarm> alarms = new ArrayList<>();
 
+    public static DateCalendar actualDate;
+
     private DayPickerView calendarView;
 
     @Override
@@ -43,8 +49,6 @@ public class CalendarFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_calendar, container, false);
 
-
-        setExampleAlarms();
 
         calendarView = (DayPickerView) rootView.findViewById(R.id.calendar_view);
         calendarView.setController(new me.nlmartian.silkcal.DatePickerController() {
@@ -55,11 +59,9 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onDayOfMonthSelected(int year, int month, int day) {
-                alarms = new ArrayList<>();
-                for (int i=0;i<day;i++)
-                {
-                    alarms.add(new Alarm( new Time(19, 5), true));
-                }
+                actualDate = new DateCalendar(DateController.getAsString(year, month, day));
+                alarms = MainActivity.dateController.getAllAlarmsByDay(actualDate);
+                if (alarms==null) alarms=new ArrayList<Alarm>();
                 setNotify();
             }
 
@@ -71,6 +73,9 @@ public class CalendarFragment extends Fragment {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         init(recyclerView);
+        Calendar now = Calendar.getInstance();
+        actualDate = new DateCalendar(DateController.getAsString(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)));
+        initAlarms();
 
         return rootView;
     }
@@ -78,11 +83,10 @@ public class CalendarFragment extends Fragment {
 
 
 
-    public void setExampleAlarms()
+    public void initAlarms()
     {
-        alarms.add(new Alarm( new Time(9, 45), true));
-        alarms.add(new Alarm( new Time(10, 2), false));
-        alarms.add(new Alarm( new Time(19, 5), true));
+        alarms = MainActivity.dateController.getAllAlarmsByDay(actualDate);
+        if (alarms==null) alarms=new ArrayList<Alarm>();
     }
 
     private void init(RecyclerView recyclerView) {
@@ -114,6 +118,9 @@ public class CalendarFragment extends Fragment {
                     @Override
                     public void onItemClick(View view, final int position) {
                         if (view.getId() == R.id.txt_delete) {
+                            MainActivity.dateController.removeAlarm(actualDate, position);
+                            MainActivity.alarmController.remove(alarms.get(position).getId());
+                            MainActivity.alarmController.show();
                             touchListener.processPendingDismisses();
                         } else if (view.getId() == R.id.txt_undo) {
                             touchListener.undoPendingDismiss();
@@ -122,7 +129,8 @@ public class CalendarFragment extends Fragment {
                                     new TimePickerDialog.OnTimeSetListener() {
                                         @Override
                                         public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
-                                            alarms.set(position, new Alarm( new Time(i, i1), true));
+                                            alarms.set(position, MainActivity.alarmController.updateTime(new Time(i, i1), alarms.get(position).getId()));
+                                            MainActivity.alarmController.show();
                                             setNotify();
                                         }
                                     },
