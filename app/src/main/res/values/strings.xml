@@ -29,5 +29,9 @@
         <item>Settings</item>
         <item>About</item>
     </string-array>
+    <string name="title_activity_pairing">Pairing...</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
