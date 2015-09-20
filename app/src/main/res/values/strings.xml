@@ -20,6 +20,7 @@
     <!--**************Toasts*****************************-->
 
     <string name="toast_date_copied">Day copied!</string>
+    <string name="toast_date_nothing_copied">Nothing to be copied!</string>
 
     <!--***************Arrays***************-->
     <string-array name="side_bar_titles">
