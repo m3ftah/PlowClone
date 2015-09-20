@@ -8,4 +8,15 @@
     <color name="switch_pink_on">#f93f7e</color>
     <color name="switch_pink_primary_on">#AAf93f7e</color>
     <color name="mdtp_accent_color">#03a9f4</color>
+    <array name="progress_colors">
+        <item>#FF3F8AF8</item>
+        <item>#FFD8433C</item>
+        <item>#FFF2AF3A</item>
+        <item>#FF279B5E</item>
+    </array>
+    <array name="in_colors">
+        <item>#FFB5D4FF</item>
+        <item>#FFDEEAFC</item>
+        <item>#FFFAFFFE</item>
+    </array>
 </resources>

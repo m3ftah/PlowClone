@@ -17,6 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
@@ -28,4 +34,5 @@ dependencies {
     compile 'com.github.rey5137:material:1.2.1'
     compile 'com.wdullaer:materialdatetimepicker:1.5.1'
     compile 'io.realm:realm-android:0.82.2'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }

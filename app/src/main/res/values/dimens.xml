@@ -5,4 +5,5 @@
     <dimen name="list_item_padding_sides">16dp</dimen>
     <dimen name="list_item_height">80dp</dimen>
     <dimen name="navigation_drawer_width">300dp</dimen>
+    <dimen name="bt_height">36dp</dimen>
 </resources>
