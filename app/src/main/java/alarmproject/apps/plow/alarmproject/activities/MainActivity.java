@@ -1,8 +1,13 @@
 package alarmproject.apps.plow.alarmproject.activities;
 import android.app.Activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -41,13 +46,15 @@ public class MainActivity extends ActionBarActivity
     public static DateController dateController;
     public static AlarmController alarmController;
     public static TimeController timeController;
-
+    PendingIntent pi;
+    AlarmManager am;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
     public static MainActivity ac;
     public static Menu m;
+    final static private long FIVE_SECONDS = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +83,7 @@ public class MainActivity extends ActionBarActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
+        setup();
     }
 
     @Override
@@ -121,6 +129,7 @@ public class MainActivity extends ActionBarActivity
                     new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
+
                             Alarm al = new Alarm(new Time(i, i1), true);
                             CalendarFragment.alarms.add(MainActivity.alarmController.save(al));
                             MainActivity.alarmController.show();
@@ -224,6 +233,19 @@ public class MainActivity extends ActionBarActivity
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
+    }
+
+    public void setup()
+    {
+
+        pi = PendingIntent.getBroadcast(this, 0, new Intent(
+                getString(R.string.service_alarm_manager)), 0);
+        am = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
+        // cette instruction est pour activer le premier appel du
+        // broadcastReciever
+        am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + FIVE_SECONDS, pi);
+
     }
 
 }

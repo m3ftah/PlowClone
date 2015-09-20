@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,7 +26,7 @@ public class BluetoothRC extends Observable  {
     private BluetoothSocket btSocket = null;
     private OutputStream outStream = null;
     private InputStream inStream = null;
-    private Activity context = null;
+    private Context context = null;
     private static BluetoothRC instance;
     private AsyncTask task;
     private ArrayList<Observer> observers = new ArrayList<>();
@@ -37,14 +38,14 @@ public class BluetoothRC extends Observable  {
     private static String address = "20:14:05:06:21:16";
 
 
-    public static BluetoothRC getInstance(Activity context){
+    public static BluetoothRC getInstance(Context context){
         if (BluetoothRC.instance == null){
             BluetoothRC.instance = new BluetoothRC(context);
         }
         return BluetoothRC.instance;
     }
 
-    private BluetoothRC(Activity context){
+    private BluetoothRC(Context context){
         this.context = context;
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!btAdapter.isEnabled()){

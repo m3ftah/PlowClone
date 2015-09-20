@@ -2,9 +2,12 @@ package alarmproject.apps.plow.alarmproject.Controller;
 
 import android.content.Context;
 import android.provider.ContactsContract;
+import android.support.annotation.ArrayRes;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import alarmproject.apps.plow.alarmproject.Fragments.CalendarFragment;
 import alarmproject.apps.plow.alarmproject.activities.MainActivity;
@@ -117,6 +120,58 @@ public class DateController {
     public static String getAsString(int year,int month,int day)
     {
         return year+"-"+month+"-"+day;
+    }
+
+    public DateCalendar getFirstAlarmDate()
+    {
+        RealmResults<DateCalendar> query=null;
+        if (!realm.getTable(DateCalendar.class).isEmpty())
+        query = realm.where(DateCalendar.class).findAllSorted("_date");
+        else return null;
+        Calendar now = Calendar.getInstance();
+        for (DateCalendar d:query)
+        {
+            if (d.getAlarms()!=null && !d.getAlarms().isEmpty() && compareDates(d.get_date(),now.get(Calendar.YEAR)+"-"+now.get(Calendar.MONTH)+"-"+now.get(Calendar.DAY_OF_MONTH))>=0) return d;
+        }
+        return null;
+    }
+
+    public Alarm getFirstAlarmTime(DateCalendar d)
+    {
+        ArrayList<Alarm> alarms = getAllAlarmsByDay(d);
+        Time t=new Time(24,61);
+        int index=0;
+        int i=0;
+        Calendar now = Calendar.getInstance();
+        for (Alarm al:alarms)
+        {
+            if (TimeController.compareTime(new Time(al.getTime().getHour(),al.getTime().getMinute()),new Time(now.get(Calendar.HOUR),now.get(Calendar.MINUTE)))>=0)
+            {
+                if (al.getTime().getHour() < t.getHour() || (al.getTime().getHour() == t.getHour() && al.getTime().getMinute() < t.getMinute())) {
+                    index = i;
+                }
+            }
+            i++;
+        }
+        return alarms.get(index);
+    }
+
+    public static int compareDates(String date1,String date2)
+    {
+        int year1 = Integer.parseInt(date1.split("-")[0]);
+        int year2 = Integer.parseInt(date2.split("-")[0]);
+        int month1 = Integer.parseInt(date1.split("-")[1]);
+        int month2 = Integer.parseInt(date2.split("-")[1]);
+        int day1 = Integer.parseInt(date1.split("-")[2]);
+        int day2 = Integer.parseInt(date2.split("-")[2]);
+
+        if (year1>year2) return 1;
+        if (year1<year2) return -1;
+        if (month1>month2) return 1;
+        if (month1<month2) return -1;
+        if (day1>day2) return 1;
+        if (day1<day2) return -1;
+        return 0;
     }
 
 }

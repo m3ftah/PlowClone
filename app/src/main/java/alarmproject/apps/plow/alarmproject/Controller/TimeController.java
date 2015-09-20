@@ -50,4 +50,13 @@ public class TimeController {
         return hours+":"+minutes;
     }
 
+    public static int compareTime(Time t1,Time t2)
+    {
+        if (t1.getHour()>t2.getHour()) return 1;
+        if (t1.getHour()<t2.getHour()) return -1;
+        if (t1.getMinute()>t2.getMinute()) return 1;
+        if (t1.getMinute()<t2.getMinute()) return -1;
+        return 0;
+    }
+
 }

@@ -21,6 +21,7 @@
 
     <string name="toast_date_copied">Day copied!</string>
     <string name="toast_date_nothing_copied">Nothing to be copied!</string>
+    <string name="toast_date_passed">Date passed!</string>
 
     <!--***************Arrays***************-->
     <string-array name="side_bar_titles">
@@ -30,5 +31,8 @@
         <item>Settings</item>
         <item>About</item>
     </string-array>
+
+    <!--**************Services*****************-->
+    <string name="service_alarm_manager">plow.apps.alarming</string>
 
 </resources>
