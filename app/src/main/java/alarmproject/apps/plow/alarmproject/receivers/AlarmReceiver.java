@@ -10,16 +10,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import alarmproject.apps.plow.alarmproject.Controller.DateController;
 import alarmproject.apps.plow.alarmproject.R;
+import alarmproject.apps.plow.alarmproject.activities.MainActivity;
 import alarmproject.apps.plow.alarmproject.model.Alarm;
 import alarmproject.apps.plow.alarmproject.model.DateCalendar;
 import app.plow.BluetoothRC;
+import app.plow.PrincipalActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {
 	AlarmManager am;
@@ -30,8 +34,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// TODO Auto-generated method stub
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
-
-		Toast.makeText(context,"Im Up",Toast.LENGTH_LONG).show();
 		
 
 		pi = PendingIntent.getBroadcast(context, 0, new Intent(
@@ -55,27 +57,31 @@ public class AlarmReceiver extends BroadcastReceiver {
 					SystemClock.elapsedRealtime() + ONE_MINUTE, pi);
 		}
 
-		DateController dt = new DateController(context);
-		DateCalendar date =dt.getFirstAlarmDate();
-		if (date!=null)
-		{
-			String today="";
-			Calendar now= Calendar.getInstance();
-			today +=now.get(Calendar.YEAR)+"-"+now.get(Calendar.MONTH)+"-"+now.get(Calendar.DAY_OF_MONTH);
-
-			if (today.equals(date.get_date()))
-			{
-				Alarm a = dt.getFirstAlarmTime(date);
-				if (a.isOn() && a.getTime().getHour()==now.get(Calendar.HOUR) && a.getTime().getMinute()==now.get(Calendar.MINUTE))
-				{
-					BluetoothRC bl = BluetoothRC.getInstance(context);
-					bl.sendData("2");
-					Toast.makeText(context,"Time to wake up",Toast.LENGTH_LONG).show();
-				}
+			DateController dt= new DateController(context);
+			if (dt.isNowFirstAlarm()) {
+				//ConnectingTask ct =new ConnectingTask(context);
+				//ct.execute();
+				Toast.makeText(context, "Time to wake up", Toast.LENGTH_LONG).show();
 			}
+
 		}
 
 
-	}
+	class ConnectingTask extends AsyncTask {
+		Context context;
+		BluetoothRC blrc;
+		public ConnectingTask(Context c)
+		{
+			this.context=c;
+		}
+		@Override
+		protected Object doInBackground(Object[] params) {
+			blrc = BluetoothRC.getInstance(context);
+			while (!blrc.connect()) continue;
+			blrc.sendData("2");
+
+			return null;
+		}
+	};
 
 }

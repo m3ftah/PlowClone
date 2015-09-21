@@ -120,7 +120,6 @@ public class CalendarFragment extends Fragment {
                         if (view.getId() == R.id.txt_delete) {
                             MainActivity.dateController.removeAlarm(actualDate, position);
                             MainActivity.alarmController.remove(alarms.get(position).getId());
-                            MainActivity.alarmController.show();
                             touchListener.processPendingDismisses();
                         } else if (view.getId() == R.id.txt_undo) {
                             touchListener.undoPendingDismiss();
@@ -130,7 +129,6 @@ public class CalendarFragment extends Fragment {
                                         @Override
                                         public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i1) {
                                             alarms.set(position, MainActivity.alarmController.updateTime(new Time(i, i1), alarms.get(position).getId()));
-                                            MainActivity.alarmController.show();
                                             setNotify();
                                         }
                                     },

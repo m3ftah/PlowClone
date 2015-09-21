@@ -29,7 +29,9 @@ import java.util.Calendar;
 import alarmproject.apps.plow.alarmproject.Controller.AlarmController;
 import alarmproject.apps.plow.alarmproject.Controller.DateController;
 import alarmproject.apps.plow.alarmproject.Controller.TimeController;
+import alarmproject.apps.plow.alarmproject.Fragments.AskFragment;
 import alarmproject.apps.plow.alarmproject.Fragments.CalendarFragment;
+import alarmproject.apps.plow.alarmproject.Fragments.StatsFragment;
 import alarmproject.apps.plow.alarmproject.R;
 import alarmproject.apps.plow.alarmproject.model.Alarm;
 import alarmproject.apps.plow.alarmproject.model.DateCalendar;
@@ -54,7 +56,7 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
     public static MainActivity ac;
     public static Menu m;
-    final static private long FIVE_SECONDS = 5000;
+    final static private long FIVE_SECONDS = 20000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +89,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public  void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -112,6 +114,8 @@ public class MainActivity extends ActionBarActivity
         getMenuInflater().inflate(R.menu.menu_calendar, menu);
         menu.getItem(2).setVisible(false);
         m=menu;
+        if (PlaceholderFragment.section_number==0) setMenuVisible(true);
+        else setMenuVisible(false);
         return true;
     }
 
@@ -121,6 +125,7 @@ public class MainActivity extends ActionBarActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_add) {
@@ -132,7 +137,6 @@ public class MainActivity extends ActionBarActivity
 
                             Alarm al = new Alarm(new Time(i, i1), true);
                             CalendarFragment.alarms.add(MainActivity.alarmController.save(al));
-                            MainActivity.alarmController.show();
                             MainActivity.dateController.addAlarm(CalendarFragment.actualDate,CalendarFragment.alarms.get(CalendarFragment.alarms.size()-1).getId());
                             CalendarFragment.setNotify();
                         }
@@ -223,6 +227,20 @@ public class MainActivity extends ActionBarActivity
                             .commit();
                 }
                 break;
+                case 1: {
+                    fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, new StatsFragment())
+                            .commit();
+                }
+                break;
+                case 2: {
+                    fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, new AskFragment())
+                            .commit();
+                }
+                break;
             }
             return rootView;
         }
@@ -248,4 +266,10 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    public static void setMenuVisible(boolean b)
+    {
+        m.getItem(0).setVisible(b);
+        m.getItem(1).setVisible(b);
+        m.getItem(2).setVisible(false);
+    }
 }

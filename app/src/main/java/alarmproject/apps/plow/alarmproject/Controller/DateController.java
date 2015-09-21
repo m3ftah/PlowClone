@@ -77,7 +77,8 @@ public class DateController {
             if (results == null) return null;
             ArrayList<Alarm> a = new ArrayList<Alarm>();
             for (RealmInteger i : results.getAlarms()) {
-                a.add(MainActivity.alarmController.getAlarmById(i.getNum()));
+                AlarmController al = new AlarmController(c);
+                a.add(al.getAlarmById(i.getNum()));
             }
             return a;
         }
@@ -98,20 +99,6 @@ public class DateController {
         }
     }
 
-
-    public void show()
-    {
-        RealmQuery<DateCalendar> query = realm.where(DateCalendar.class);
-
-        RealmResults<DateCalendar> results = query.findAll();
-        String s="";
-        for (DateCalendar r:results)
-        {
-            s+=toString(r)+"\n";
-        }
-        Toast.makeText(c,s,Toast.LENGTH_LONG).show();
-    }
-
     public String toString(DateCalendar a)
     {
         return a.get_date()+" "+a.getAlarms();
@@ -122,38 +109,23 @@ public class DateController {
         return year+"-"+month+"-"+day;
     }
 
-    public DateCalendar getFirstAlarmDate()
+    public Boolean isNowFirstAlarm()
     {
-        RealmResults<DateCalendar> query=null;
+        Calendar now =Calendar.getInstance();
+        int year = now.get(Calendar.YEAR);
+        int month = now.get(Calendar.MONTH);
+        int day = now.get(Calendar.DAY_OF_MONTH);
+        DateCalendar query=null;
         if (!realm.getTable(DateCalendar.class).isEmpty())
-        query = realm.where(DateCalendar.class).findAllSorted("_date");
-        else return null;
-        Calendar now = Calendar.getInstance();
-        for (DateCalendar d:query)
-        {
-            if (d.getAlarms()!=null && !d.getAlarms().isEmpty() && compareDates(d.get_date(),now.get(Calendar.YEAR)+"-"+now.get(Calendar.MONTH)+"-"+now.get(Calendar.DAY_OF_MONTH))>=0) return d;
-        }
-        return null;
-    }
-
-    public Alarm getFirstAlarmTime(DateCalendar d)
-    {
-        ArrayList<Alarm> alarms = getAllAlarmsByDay(d);
-        Time t=new Time(24,61);
-        int index=0;
-        int i=0;
-        Calendar now = Calendar.getInstance();
+        query = realm.where(DateCalendar.class).equalTo("_date",getAsString(year,month,day)).findFirst();
+        else return false;
+        if (query==null) return false;
+        ArrayList<Alarm> alarms = getAllAlarmsByDay(query);
         for (Alarm al:alarms)
         {
-            if (TimeController.compareTime(new Time(al.getTime().getHour(),al.getTime().getMinute()),new Time(now.get(Calendar.HOUR),now.get(Calendar.MINUTE)))>=0)
-            {
-                if (al.getTime().getHour() < t.getHour() || (al.getTime().getHour() == t.getHour() && al.getTime().getMinute() < t.getMinute())) {
-                    index = i;
-                }
-            }
-            i++;
+            if (al.getTime().getHour()==now.get(Calendar.HOUR_OF_DAY) && al.getTime().getMinute()==now.get(Calendar.MINUTE) && al.isOn()) return true;
         }
-        return alarms.get(index);
+        return false;
     }
 
     public static int compareDates(String date1,String date2)

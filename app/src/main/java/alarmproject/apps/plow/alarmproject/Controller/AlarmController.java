@@ -62,7 +62,7 @@ public class AlarmController  {
         realm.commitTransaction();
     }
 
-    public Alarm getAlarmById(long id)
+    public  Alarm getAlarmById(long id)
     {
         RealmQuery<Alarm> query = realm.where(Alarm.class).equalTo("id", id);
         return query.findFirst();

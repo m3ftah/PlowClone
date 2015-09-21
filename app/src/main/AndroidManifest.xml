@@ -3,7 +3,7 @@
     package="alarmproject.apps.plow.alarmproject" >
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -25,17 +25,19 @@
             android:label="@string/title_activity_calendar" >
 
         </activity>
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_calendar" >
-        </activity>
-        <activity
-            android:name="app.plow.Pairing"
-            android:label="@string/title_activity_pairing" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="app.plow.Pairing"
+            android:label="@string/title_activity_pairing" >
         </activity>
     </application>
 

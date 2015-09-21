@@ -4,6 +4,21 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!--*******************TextView**********************-->
+    <string name="text_ask_me">What can i help you\ndo now?</string>
+    <string name="text_ask_voice">What can i help you?</string>
+
+    <!--******************Voice recognization****************-->
+    <string name="speech_prompt">Say something&#8230;</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="speech_add_alarm">alarm</string>
+    <string name="speech_command_insupported">Sorry! unsupported command!</string>
+    <string name="speech_time">Okey! what time?</string>
+    <string name="speech_alarm_added">Good! Alarm added</string>
+    <string name="speech_show_calendar">calendar</string>
+    <string name="speech_show_stats">stats</string>
+    <string name="speech_okey">Okey!</string>
+
     <!--******************Gmail recycler view***********************-->
 
     <string name="list_view">List View</string>
@@ -39,5 +54,24 @@
 
     <!--**************Services*****************-->
     <string name="service_alarm_manager">plow.apps.alarming</string>
+
+
+    <!--********************Colors***********-->
+    <string-array name="graph_clors">
+        <item>#F44336</item>
+        <item>#E91E63</item>
+        <item>#9C27B0</item>
+        <item>#3F51B5</item>
+        <item>#2196F3</item>
+        <item>#00BCD4</item>
+        <item>#009688</item>
+        <item>#4CAF50</item>
+        <item>#FFEB3B</item>
+        <item>#FF9800</item>
+        <item>#795548</item>
+        <item>#9E9E9E</item>
+    </string-array>
+
+
 
 </resources>
