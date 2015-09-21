@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.rey.material.widget.Button;
 
 import alarmproject.apps.plow.alarmproject.R;
+import app.plow.bluetooth.BluetoothRC;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

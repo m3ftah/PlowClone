@@ -16,15 +16,37 @@
         <receiver android:name=".receivers.AlarmReceiver" >
             <intent-filter>
                 <action android:name="plow.apps.alarming" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="app.plow.bluetooth.BluetoothService"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/service_name" >
+        </service>
+
+        <receiver android:name="app.plow.bluetooth.MyStartServiceReceiver" >
+            <intent-filter>
+                <action android:name="ANDROID.INTENT.ACTION.BOOT_COMPLETED" />
+                <action android:name="app.plow.bluetooth.MyStartServiceReceiver" />
             </intent-filter>
         </receiver>
 
+        <receiver android:name="app.plow.bluetooth.ServiceReceiver" >
+        <intent-filter>
+            <action android:name="app.plow.bluetooth.ServiceReceiver" />
+        </intent-filter>
+        </receiver>
         <activity
             android:name="app.plow.PrincipalActivity"
             android:label="@string/title_activity_calendar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_calendar" >

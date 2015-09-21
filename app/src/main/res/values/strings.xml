@@ -39,5 +39,6 @@
 
     <!--**************Services*****************-->
     <string name="service_alarm_manager">plow.apps.alarming</string>
+    <string name="service_name">Service Bluetooth</string>
 
 </resources>
