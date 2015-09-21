@@ -1,51 +1,55 @@
+/* 
+ * Author : Meftah Lakhdar.
+ * SmartPlow Arduino code
+ * Checking the Plow state and reporting on change by "O" or "1" 
+ * Respond: 
+ * to "2" by vibrating,
+ * to "3" by reporting the Plow state,
+ * else doing nothing.
+ */
+
 #include "SoftwareSerial.h"
 const int TX_BT=10;
 const int RX_BT=11;
 
 SoftwareSerial btSerial(TX_BT,RX_BT);
-/* SmartPlow Arduino code
-**
-** Credit: The following example was used as a reference
-** Rui Santos: http://randomnerdtutorials.wordpress.com
-*/
 
-int ledPin = 13;  // use the built in LED on pin 13 of the Uno
-int plow = 3;
-int state = 0;
-int flag = 0;
-byte num = 6, vibrorPin = 12;
-int waiting = 1000;
-
-int val=0;// make sure that you return the state only once
+int plow = 3, state = 0, waiting = 1000;
+byte vibroNum = 6, vibrorPin = 12;
 unsigned long timeout1 = 3000, timeref1 = 0;
+
 void setup() {
-    // sets the pins as outputs:
-    pinMode(ledPin, OUTPUT);
-    pinMode(12,OUTPUT);    
+    // sets the pins mode
+    pinMode(vibrorPin,OUTPUT);    
     pinMode(plow,INPUT);
-    digitalWrite(ledPin, LOW);
-    digitalWrite(12, LOW);
+    
+    digitalWrite(vibrorPin, LOW);
     
     btSerial.begin(9600); // Default connection rate for my BT module
-    Serial.begin(115200);
 }
 
 void loop() {
-  
-    if (millis() - timeref1 > timeout1){
-      timeref1 = millis();
-      if (digitalRead(plow) != state) repport();
+  //check the Plow state every 'timeout1' ms
+  if (millis() - timeref1 > timeout1){
+    timeref1 = millis();
+    if (digitalRead(plow) != state){
+      state = !state;
+      repport();
     }
-    //if some data is sent, read it and save it in the state variable
-    if(btSerial.available() > 0){
-      char btRead = btSerial.read();
-      if (btRead == '2'){
-        vibror(6);
-      }else if (btRead =='3') {
-        repport();
-      }
+  }
+  //if some data received, read it, vibrate, report or ignore.
+  if(btSerial.available() > 0){
+    char btRead = btSerial.read();
+    if (btRead == '2'){
+      vibror(vibroNum);
+    }else if (btRead =='3') {
+      repport();
     }
+  }
 }
+/*
+ * Vibrate 'num' times for 'waiting'ms
+ */
 void vibror(byte num){
   byte i = 0;
   for (i=0; i<num; i++){
@@ -55,6 +59,9 @@ void vibror(byte num){
     delay(waiting);
   }
 }
+/*
+ * Repport to bluetooth by "0" or "1"
+ */
 void repport(){
   if ( digitalRead(plow)){
       btSerial.print("1");
@@ -62,4 +69,3 @@ void repport(){
       btSerial.print("0");
   }
 }
-
