@@ -14,6 +14,7 @@ import com.rey.material.widget.Button;
 import alarmproject.apps.plow.alarmproject.R;
 import alarmproject.apps.plow.alarmproject.activities.MainActivity;
 import app.plow.bluetooth.BluetoothRC;
+import app.plow.bluetooth.BluetoothService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,6 +51,12 @@ public class Pairing extends Activity {
         setContentView(R.layout.activity_pairing);
         ButterKnife.bind(this);
         retry.setVisibility(View.INVISIBLE);
-        new ConnectingTask().execute();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(new Intent(this, BluetoothService.class));
     }
 }
