@@ -1,10 +1,12 @@
 package app.plow;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +18,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import alarmproject.apps.plow.alarmproject.R;
+import app.plow.bluetooth.BluetoothRC;
+import app.plow.bluetooth.BluetoothService;
 
 
 public class PrincipalActivity extends Activity implements Observer{
@@ -75,20 +79,40 @@ public class PrincipalActivity extends Activity implements Observer{
     @Override
     public void onResume() {
         super.onResume();
-        blrc.onResume();
-        blrc.startListening();
+        startService(new Intent(this, BluetoothService.class));
+        //blrc.onResume();
+        //blrc.startListening();
         lamp_yellow_on  = getPreferences(MODE_PRIVATE).getBoolean("led",true);
-        /*if (!lamp_yellow_on)
-            lamp_yellow.setImageResource(R.drawable.lamp_off);
-        else
-            lamp_yellow.setImageResource(R.drawable.lamp_yellow);*/
+        //registerReceiver(
+                new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Bundle b = intent.getExtras();
+                switch (b.getInt(BluetoothAdapter.EXTRA_STATE)){
+                    case BluetoothAdapter.STATE_TURNING_OFF:Log.d("stateBluetooth","turning off");
+                        stopService(new Intent(context,BluetoothService.class));
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:Log.d("stateBluetooth", "turning on");
+                        break;
+                    case BluetoothAdapter.STATE_OFF:Log.d("stateBluetooth","off");
+                        break;
+                    case BluetoothAdapter.STATE_ON:Log.d("stateBluetooth","on");
+                        context.startService(new Intent(context,BluetoothService.class));
+                        break;
+                }
+                unregisterReceiver(this);
+            }
+        };//,new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        //);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        blrc.onPause();
+        //blrc.onPause();
         getPreferences(MODE_PRIVATE).edit().putBoolean("led",lamp_yellow_on).commit();
+
     }
 
     private void sendData(String message) {

@@ -1,10 +1,10 @@
-package app.plow;
+package app.plow.bluetooth;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -84,15 +84,9 @@ public class BluetoothRC extends Observable  {
         btAdapter.cancelDiscovery();
         // Establish the connection. This will block until it connects.
         Log.d(TAG, "...Connecting to Remote...");
-        long ref = System.currentTimeMillis();
-        while( System.currentTimeMillis() - ref < 2000) continue;
-        int i = 0;
-        boolean ok = false;
-        while(i<3 &&!ok)
+
         try {
-            i++;
             btSocket.connect();
-            ok = true;
             Log.d(TAG, "...Connection established and data link opened...");
         } catch (IOException e) {
             problem = true;
@@ -161,9 +155,22 @@ public class BluetoothRC extends Observable  {
             @Override
             protected Object doInBackground(Object[] params) {
                 try {
+
                         while (btSocket.isConnected()) {
                             while (inStream.available() == 0) {
-                                continue;
+                                if (!isConnected()){
+                                    Log.d("stateConnection", "Disconnected");
+                                    onPause();
+                                    /*context.startService(new Intent(
+                                            context.getApplicationContext(),BluetoothService.class
+                                    ));
+                                    long ref = System.currentTimeMillis();
+                                    while( System.currentTimeMillis() - ref < 2000) continue;*/
+                                    BluetoothService.connected = false;
+                                    BluetoothRC blrc = BluetoothRC.getInstance(context);
+                                    if (!BluetoothService.connected) while(!blrc.connect()) continue;
+                                }
+
                             }
                             final String str = receiveData();
                             Log.d(TAG, "Data Received: " + str);
@@ -171,7 +178,7 @@ public class BluetoothRC extends Observable  {
 
                         }
                     }catch(IOException e){
-                        e.printStackTrace();
+                       // e.printStackTrace();
                     }
 
                 return null;
@@ -194,4 +201,15 @@ public class BluetoothRC extends Observable  {
     }
 
 
+    public boolean isConnected() {
+        long ref = System.currentTimeMillis();
+        while( System.currentTimeMillis() - ref < 2000) continue;
+        try {
+            outStream.write("0".getBytes());
+        } catch (IOException e) {
+            Log.d(TAG,"erreur sending Data");
+            return false;
+        }
+        return true;
+    }
 }
