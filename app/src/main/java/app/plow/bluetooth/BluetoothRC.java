@@ -31,7 +31,7 @@ public class BluetoothRC extends Observable  {
     private AsyncTask task;
     private ArrayList<Observer> observers = new ArrayList<>();
     private boolean connected = false;
-   // Well known SPP UUID
+    // Well known SPP UUID
     private static final UUID MY_UUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -156,30 +156,30 @@ public class BluetoothRC extends Observable  {
             protected Object doInBackground(Object[] params) {
                 try {
 
-                        while (btSocket.isConnected()) {
-                            while (inStream.available() == 0) {
-                                if (!isConnected()){
-                                    Log.d("stateConnection", "Disconnected");
-                                    onPause();
+                    while (btSocket.isConnected()) {
+                        while (inStream.available() == 0) {
+                            if (!isConnected()){
+                                Log.d("stateConnection", "Disconnected");
+                                onPause();
                                     /*context.startService(new Intent(
                                             context.getApplicationContext(),BluetoothService.class
                                     ));
                                     long ref = System.currentTimeMillis();
                                     while( System.currentTimeMillis() - ref < 2000) continue;*/
-                                    BluetoothService.connected = false;
-                                    BluetoothRC blrc = BluetoothRC.getInstance(context);
-                                    if (!BluetoothService.connected) while(!blrc.connect()) continue;
-                                }
-
+                                BluetoothService.connected = false;
+                                BluetoothRC blrc = BluetoothRC.getInstance(context);
+                                if (!BluetoothService.connected) while(!blrc.connect()) continue;
                             }
-                            final String str = receiveData();
-                            Log.d(TAG, "Data Received: " + str);
-                            BluetoothRC.this.notifyObservers(str);
 
                         }
-                    }catch(IOException e){
-                       // e.printStackTrace();
+                        final String str = receiveData();
+                        Log.d(TAG, "Data Received: " + str);
+                        BluetoothRC.this.notifyObservers(str);
+
                     }
+                }catch(IOException e){
+                    // e.printStackTrace();
+                }
 
                 return null;
             }

@@ -22,8 +22,9 @@ import alarmproject.apps.plow.alarmproject.R;
 import alarmproject.apps.plow.alarmproject.activities.MainActivity;
 import alarmproject.apps.plow.alarmproject.model.Alarm;
 import alarmproject.apps.plow.alarmproject.model.DateCalendar;
-import app.plow.BluetoothRC;
+import app.plow.bluetooth.BluetoothRC;
 import app.plow.PrincipalActivity;
+import app.plow.bluetooth.BluetoothService;
 
 public class AlarmReceiver extends BroadcastReceiver {
 	AlarmManager am;
@@ -59,9 +60,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 			DateController dt= new DateController(context);
 			if (dt.isNowFirstAlarm()) {
-				//ConnectingTask ct =new ConnectingTask(context);
-				//ct.execute();
 				Toast.makeText(context, "Time to wake up", Toast.LENGTH_LONG).show();
+				Intent service = new Intent(context.getApplicationContext(), BluetoothService.class);
+				context.startService(service);
+				/*ConnectingTask ct =new ConnectingTask(context);
+				ct.execute();*/
 			}
 
 		}

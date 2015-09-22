@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AlarmProject</string>
+    <string name="app_name">PLow</string>
     <string name="title_activity_calendar">TimeLine</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
