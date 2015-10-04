@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,8 +31,6 @@ public class PrincipalActivity extends Activity implements Observer{
     BluetoothRC blrc = null;
     GoogleVoice gvc = null;
     Button b;
-
-
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +76,8 @@ public class PrincipalActivity extends Activity implements Observer{
     @Override
     public void onResume() {
         super.onResume();
-        startService(new Intent(this, BluetoothService.class));
+        sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH,"restart"));
+        //startService(new Intent(this, BluetoothService.class));
         //blrc.onResume();
         //blrc.startListening();
         lamp_yellow_on  = getPreferences(MODE_PRIVATE).getBoolean("led",true);
@@ -158,5 +156,13 @@ public class PrincipalActivity extends Activity implements Observer{
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy called");
+        //sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver"));
+        Log.d(TAG, "broadcast sent");
     }
 }

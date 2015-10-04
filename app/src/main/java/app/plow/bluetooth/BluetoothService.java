@@ -46,7 +46,7 @@ public class BluetoothService extends Service implements Observer{
                 BluetoothService.connected = true;
                 blrc.sendData("2");
                 blrc.startListening();
-                publishResults("ready", Activity.RESULT_OK);
+                //publishResults("ready", Activity.RESULT_OK);
                 return null;
             }
         }.execute();
@@ -56,8 +56,7 @@ public class BluetoothService extends Service implements Observer{
 
 
     private void publishResults(String outputPath, int result) {
-        Intent intent = new Intent("app.plow.bluetooth.ServiceReceiver");
-        intent.putExtra(FILEPATH, outputPath);
+        Intent intent = new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(FILEPATH, outputPath);
         sendBroadcast(intent);
     }
 
@@ -72,7 +71,7 @@ public class BluetoothService extends Service implements Observer{
     }
 
     public class MyBinder extends Binder {
-        BluetoothService getService() {
+        public BluetoothService getService() {
             return BluetoothService.this;
         }
     }
@@ -84,7 +83,8 @@ public class BluetoothService extends Service implements Observer{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("BluetoothService","onDestroy called");
         BluetoothRC.getInstance(getApplicationContext()).onPause();
-        sendBroadcast(new Intent("app.plow.bluetooth.MyStartServiceReceiver"));
+        sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver"));
     }
 }
