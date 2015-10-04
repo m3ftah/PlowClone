@@ -22,22 +22,20 @@ public class ServiceReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        Bundle bundle = intent.getExtras();
-        String string = bundle.getString(BluetoothService.FILEPATH);
         Log.d("hi","Received in ServiceReceiver");
-        Toast.makeText(context.getApplicationContext(),string,
-                Toast.LENGTH_LONG).show();
-        Intent intentone = new Intent(context.getApplicationContext(), BluetoothService.class);
+        /*Toast.makeText(context.getApplicationContext(),string,
+                Toast.LENGTH_LONG).show();*/
+       /* Intent intentone = new Intent(context.getApplicationContext(), BluetoothService.class);
         intentone.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        //context.startActivity(intentone);
-        if (string.equals("ready")){
+        *///context.startActivity(intentone);
+        /*if (string.equals("ready")){
             notify("SmartPlow","est connecté");
-        }else if(string.equals("restart")){
+        }else if(string.equals("restart")){*/
             Intent service = new Intent(context.getApplicationContext(), BluetoothService.class);
             service.addFlags(Intent.FLAG_FROM_BACKGROUND);
             Log.d("starter","Set");
             context.startService(service);
-        }
+
 
     }
     private void notify(String notificationTitle, String notificationMessage){

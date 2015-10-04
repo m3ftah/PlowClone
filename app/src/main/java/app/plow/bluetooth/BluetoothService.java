@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import alarmproject.apps.plow.alarmproject.activities.MainActivity;
+
 public class BluetoothService extends Service implements Observer{
     private final IBinder mBinder = new MyBinder();
     private ArrayList<String> list = new ArrayList<String>();
@@ -44,8 +46,11 @@ public class BluetoothService extends Service implements Observer{
                 blrc.addObserver(BluetoothService.this);
                 if (!BluetoothService.connected) while(!blrc.connect()) continue;
                 BluetoothService.connected = true;
-                blrc.sendData("2");
+                //blrc.sendData("2");
                 blrc.startListening();
+
+                startActivity(new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+
                 //publishResults("ready", Activity.RESULT_OK);
                 return null;
             }

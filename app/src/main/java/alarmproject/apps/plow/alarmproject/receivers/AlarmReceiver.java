@@ -32,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	final static private long ONE_MINUTE = 60000;
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		// TODO Auto-generated method stub
+
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		
@@ -61,8 +61,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 			DateController dt= new DateController(context);
 			if (dt.isNowFirstAlarm()) {
 				Toast.makeText(context, "Time to wake up", Toast.LENGTH_LONG).show();
-				Intent service = new Intent(context.getApplicationContext(), BluetoothService.class);
-				context.startService(service);
+                context.sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
+                BluetoothRC.getInstance(context).sendData("2");
 				/*ConnectingTask ct =new ConnectingTask(context);
 				ct.execute();*/
 			}
