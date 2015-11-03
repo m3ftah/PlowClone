@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">PLow</string>
+    <string name="title_activity_calendar">TimeLine</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!--*******************TextView**********************-->
+    <string name="text_ask_me">What can i help you\ndo now?</string>
+    <string name="text_ask_voice">What can i help you?</string>
+    <string name="text_ask_alarm">Do you want set the alarm before sleeping?</string>
+
+    <!--******************Voice recognization****************-->
+    <string name="speech_prompt">Say something&#8230;</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="speech_add_alarm">alarm</string>
+    <string name="speech_add_yes">yes</string>
+    <string name="speech_add_no">no</string>
+    <string name="speech_command_insupported">Sorry! unsupported command!</string>
+    <string name="speech_time">Okey! what time?</string>
+    <string name="speech_alarm_added">Good! Alarm added</string>
+    <string name="speech_show_calendar">calendar</string>
+    <string name="speech_show_stats">stats</string>
+    <string name="speech_okey">Okey!</string>
+
+    <!--******************Gmail recycler view***********************-->
+
+    <string name="list_view">List View</string>
+    <string name="recycler_view">Recycler View</string>
+    <string name="deleted">Deleted</string>
+    <string name="undo">UNDO</string>
+    
+    <!--****************Menu***********************************-->
+    
+    <string name="menu_copy">Copy</string>
+    <string name="menu_paste">Paste</string>
+    <string name="menu_add">Add</string>
+
+    <!--**************Toasts*****************************-->
+
+    <string name="toast_date_copied">Day copied!</string>
+    <string name="toast_date_nothing_copied">Nothing to be copied!</string>
+    <string name="toast_date_passed">Date passed!</string>
+
+    <!--***************Arrays***************-->
+    <string-array name="side_bar_titles">
+        <item>Time line</item>
+        <item>Stats</item>
+        <item>Ask Me</item>
+        <item>Settings</item>
+        <item>About</item>
+    </string-array>
+    <string name="title_activity_pairing">Plow</string>
+    <string name="connecting">Connecting...</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!--**************Services*****************-->
+    <string name="service_alarm_manager">plow.apps.alarming</string>
+    <string name="service_name">Service Bluetooth</string>
+
+
+    <!--********************Colors***********-->
+    <string-array name="graph_clors">
+        <item>#F44336</item>
+        <item>#E91E63</item>
+        <item>#9C27B0</item>
+        <item>#3F51B5</item>
+        <item>#2196F3</item>
+        <item>#00BCD4</item>
+        <item>#009688</item>
+        <item>#4CAF50</item>
+        <item>#FFEB3B</item>
+        <item>#FF9800</item>
+        <item>#795548</item>
+        <item>#9E9E9E</item>
+    </string-array>
+
+
+
+</resources>
