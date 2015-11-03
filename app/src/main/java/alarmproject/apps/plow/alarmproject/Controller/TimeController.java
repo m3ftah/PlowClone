@@ -1,7 +1,6 @@
 package alarmproject.apps.plow.alarmproject.Controller;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import alarmproject.apps.plow.alarmproject.model.Time;
 import io.realm.Realm;
@@ -39,7 +38,6 @@ public class TimeController {
         {
             s+=toString(t)+"\n";
         }
-        Toast.makeText(c,s,Toast.LENGTH_LONG).show();
     }
     public static String toString(Time t)
     {

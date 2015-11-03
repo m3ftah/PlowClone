@@ -1,8 +1,6 @@
 package alarmproject.apps.plow.alarmproject.Controller;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import alarmproject.apps.plow.alarmproject.model.Alarm;
 import alarmproject.apps.plow.alarmproject.model.Time;
@@ -91,7 +89,6 @@ public class AlarmController  {
         {
             s+=toString(r)+"\n";
         }
-        Toast.makeText(c,s,Toast.LENGTH_LONG).show();
     }
     public String toString(Alarm a)
     {

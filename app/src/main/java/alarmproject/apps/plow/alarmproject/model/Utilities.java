@@ -2,8 +2,12 @@ package alarmproject.apps.plow.alarmproject.model;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.TextView;
+
+import alarmproject.apps.plow.alarmproject.R;
 
 /**
  * Created by YouNesS on 18/09/2015.
@@ -20,5 +24,11 @@ public class Utilities {
         Typeface font = Typeface.createFromAsset(c.getAssets(),
                 "AppFonts/" +fontInUse);
         but.setTypeface(font);
+    }
+
+    public static void playMusic(Context c,int id)
+    {
+        MediaPlayer mp = MediaPlayer.create(c, id);
+        mp.start();
     }
 }

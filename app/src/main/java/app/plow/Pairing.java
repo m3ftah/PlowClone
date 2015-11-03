@@ -16,6 +16,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import alarmproject.apps.plow.alarmproject.R;
+import alarmproject.apps.plow.alarmproject.activities.AskActivity;
 import alarmproject.apps.plow.alarmproject.activities.MainActivity;
 import app.plow.bluetooth.BluetoothRC;
 import app.plow.bluetooth.BluetoothService;
@@ -40,6 +41,10 @@ public class Pairing extends Activity implements Observer {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (str.equals("1"))
+                    {
+                        startActivity(new Intent(getApplicationContext(), AskActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
                     Toast.makeText(Pairing.this, " received : " + str, Toast.LENGTH_SHORT).show();
                 }
             });

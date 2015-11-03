@@ -57,22 +57,9 @@ import lecho.lib.hellocharts.view.LineChartView;
 /**
  * Created by sony on 18/02/2015.
  */
-public class AskFragment extends Fragment implements TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener {
+public class AskFragment extends Fragment {
     TextView tv_ask;
     ImageButton btn_voice;
-    int state=0;
-
-    public static final String EXTRA_TEXT = "text";
-    public static final String EXTRA_SONG = "song";
-    public static final String EXTRA_SONG_DURATION = "songDuration";
-
-    private static final int DEFAULT_DURATION = 10; // 10 seconds
-
-    private String text;
-    private String song;
-    private long songDuration;
-    private TextToSpeech textToSpeech;
-    private MediaPlayer mPlayer;
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     public VoiceCommand calendar;
@@ -94,16 +81,8 @@ public class AskFragment extends Fragment implements TextToSpeech.OnInitListener
             }
         });
         Utilities.setFontText(getActivity(), tv_ask);
-        text=getString(R.string.text_ask_voice);
-        song = getActivity().getIntent() != null && getActivity().getIntent().hasExtra(EXTRA_SONG)
-                ? getActivity().getIntent().getStringExtra(EXTRA_SONG) : null;
 
-        songDuration = getActivity().getIntent() != null && getActivity().getIntent().hasExtra(EXTRA_SONG_DURATION)
-                ? Long.parseLong(getActivity().getIntent().getStringExtra(EXTRA_SONG_DURATION)) : DEFAULT_DURATION;
-
-        textToSpeech = new TextToSpeech(getActivity(), this);
-
-        speakAndPlayMusic();
+        Utilities.playMusic(getActivity(), R.raw.what_can_i_help_you);
 
         calendar = new VoiceCommand(getString(R.string.speech_show_calendar)) {
             @Override
@@ -135,66 +114,6 @@ public class AskFragment extends Fragment implements TextToSpeech.OnInitListener
         return rootView;
     }
 
-    @Override
-    public void onInit(int status) {
-        textToSpeech.setOnUtteranceCompletedListener(this);
-        speakAndPlayMusic();
-    }
-    private void speakAndPlayMusic() {
-        new AsyncTask<Void, Void, Void>(){
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                speakAndPlayMusicInBackground();
-                return null;
-            }
-        }.execute((Void) null);
-    }
-
-    private void speakAndPlayMusicInBackground() {
-
-        File file;
-        if (song != null && (file = new File(song)).exists()) {
-            // play song first
-            mPlayer = MediaPlayer.create(getActivity(), Uri.fromFile(file));
-            mPlayer.start();
-            try {
-                Thread.sleep(TimeUnit.SECONDS.toMillis(songDuration));
-            } catch (InterruptedException e) { /* shouldn't happen */ }
-            mPlayer.stop();
-            try {
-                Thread.sleep(1000); // pause between music stop and TTS
-            } catch (InterruptedException e) { /* shouldn't happen */ }
-            speak();
-        } else {
-            // just speak
-            speak();
-        }
-    }
-
-    private void speak() {
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "meaninglessString");
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, params);
-    }
-
-    @Override
-    public void onUtteranceCompleted(String arg0) {
-        //finish();
-    }
-
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mPlayer != null) {
-            mPlayer.release();
-        }
-        if (textToSpeech != null) {
-            textToSpeech.shutdown();
-        }
-    }
 
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -228,15 +147,13 @@ public class AskFragment extends Fragment implements TextToSpeech.OnInitListener
                     if (calendar.tryParse(result.get(0)))
                     {
                         tv_ask.setText(getString(R.string.speech_okey));
-                        text=getString(R.string.speech_okey);
-                        speakAndPlayMusic();
+                        Utilities.playMusic(getActivity(), R.raw.okey);
                         calendar.action();
                     }
                     else if (stats.tryParse(result.get(0)))
                     {
                         tv_ask.setText(getString(R.string.speech_okey));
-                        text=getString(R.string.speech_okey);
-                        speakAndPlayMusic();
+                        Utilities.playMusic(getActivity(), R.raw.okey);
                         stats.action();
                     }
                     else if(alarmCommand.tryParse(result.get(0)))
@@ -244,21 +161,18 @@ public class AskFragment extends Fragment implements TextToSpeech.OnInitListener
                         if (alarmCommand.getState()==1)
                         {
                             tv_ask.setText(getString(R.string.speech_time));
-                            text=getString(R.string.speech_time);
-                            speakAndPlayMusic();
+                            Utilities.playMusic(getActivity(), R.raw.speech_time);
                         }
                         else {
-                            tv_ask.setText(getString(R.string.speech_okey));
-                            text=getString(R.string.speech_okey);
-                            speakAndPlayMusic();
+                            tv_ask.setText(getString(R.string.speech_alarm_added));
+                            Utilities.playMusic(getActivity(), R.raw.alarm_added);
                             alarmCommand.action(Integer.parseInt(result.get(0).split(":")[0]),Integer.parseInt(result.get(0).split(":")[1]));
                         }
                     }
                     else
                     {
                         tv_ask.setText(getString(R.string.speech_command_insupported));
-                        text=getString(R.string.speech_command_insupported);
-                        speakAndPlayMusic();
+                        Utilities.playMusic(getActivity(), R.raw.sorry_unsupported_command);
                     }
                 }
                 break;

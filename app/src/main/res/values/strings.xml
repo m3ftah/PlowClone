@@ -7,11 +7,14 @@
     <!--*******************TextView**********************-->
     <string name="text_ask_me">What can i help you\ndo now?</string>
     <string name="text_ask_voice">What can i help you?</string>
+    <string name="text_ask_alarm">Do you want set the alarm before sleeping?</string>
 
     <!--******************Voice recognization****************-->
     <string name="speech_prompt">Say something&#8230;</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="speech_add_alarm">alarm</string>
+    <string name="speech_add_yes">yes</string>
+    <string name="speech_add_no">no</string>
     <string name="speech_command_insupported">Sorry! unsupported command!</string>
     <string name="speech_time">Okey! what time?</string>
     <string name="speech_alarm_added">Good! Alarm added</string>

@@ -56,7 +56,7 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
     public static MainActivity ac;
     public static Menu m;
-    final static private long FIVE_SECONDS = 20000;
+    final static private long FIVE_SECONDS = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +84,18 @@ public class MainActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
+        /*final SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        boolean is_first = prefs.getBoolean("is_first",
+                true);
+        if (is_first)
+        {*/
+            setup();
+           /* SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("is_first", false);
+            editor.commit();
+        }*/
 
-        setup();
     }
 
     @Override

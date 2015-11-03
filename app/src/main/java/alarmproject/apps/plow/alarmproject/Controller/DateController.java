@@ -1,13 +1,9 @@
 package alarmproject.apps.plow.alarmproject.Controller;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.support.annotation.ArrayRes;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import alarmproject.apps.plow.alarmproject.Fragments.CalendarFragment;
 import alarmproject.apps.plow.alarmproject.activities.MainActivity;
@@ -18,7 +14,6 @@ import alarmproject.apps.plow.alarmproject.model.Time;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by YouNesS on 19/09/2015.
