@@ -10,6 +10,7 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
 import alarmproject.apps.plow.alarmproject.Controller.DateController;
@@ -32,11 +35,12 @@ import alarmproject.apps.plow.alarmproject.model.Time;
 import alarmproject.apps.plow.alarmproject.model.Utilities;
 import alarmproject.apps.plow.alarmproject.model.VoiceAlarmCommand;
 import alarmproject.apps.plow.alarmproject.model.VoiceCommand;
+import app.plow.bluetooth.BluetoothRC;
 
 /**
  * Created by sony on 18/02/2015.
  */
-public class AskActivity extends ActionBarActivity {
+public class AskActivity extends ActionBarActivity  {
     TextView tv_ask;
     ImageButton btn_voice;
 
@@ -67,6 +71,8 @@ public class AskActivity extends ActionBarActivity {
        Utilities.playMusic(this,R.raw.text_ask_alarm);
 
     }
+
+
 
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -102,6 +108,7 @@ public class AskActivity extends ActionBarActivity {
                     {
                         if (result.get(0).equalsIgnoreCase(getString(R.string.speech_add_no)))
                         {
+                            // disconnect bluetooth and start an other service
                             finish();
                         }
                         else if (result.get(0).equalsIgnoreCase(getString(R.string.speech_add_yes)))
@@ -122,6 +129,7 @@ public class AskActivity extends ActionBarActivity {
                         {
                             action(Integer.parseInt(result.get(0).toLowerCase().split(":")[0]), Integer.parseInt(result.get(0).toLowerCase().split(":")[1]));
                             tv_ask.setText(getString(R.string.speech_okey));
+                            // disconnect bluetooth
                             finish();
                         }
                         else {

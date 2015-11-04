@@ -1,6 +1,8 @@
 package alarmproject.apps.plow.alarmproject.receivers;
 
 import java.util.Calendar;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -19,14 +21,16 @@ import android.widget.Toast;
 
 import alarmproject.apps.plow.alarmproject.Controller.DateController;
 import alarmproject.apps.plow.alarmproject.R;
+import alarmproject.apps.plow.alarmproject.activities.AskActivity;
 import alarmproject.apps.plow.alarmproject.activities.MainActivity;
 import alarmproject.apps.plow.alarmproject.model.Alarm;
 import alarmproject.apps.plow.alarmproject.model.DateCalendar;
+import alarmproject.apps.plow.alarmproject.model.Utilities;
 import app.plow.bluetooth.BluetoothRC;
 import app.plow.PrincipalActivity;
 import app.plow.bluetooth.BluetoothService;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class AlarmReceiver extends BroadcastReceiver{
 	AlarmManager am;
 	PendingIntent pi;
 	final static private long ONE_MINUTE = 60000;
@@ -35,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// TODO Auto-generated method stub
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		
+
 
 		pi = PendingIntent.getBroadcast(context, 0, new Intent(
 				context.getResources().getString(R.string.service_alarm_manager)), 0);
@@ -60,12 +64,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 			DateController dt= new DateController(context);
 			if (dt.isNowFirstAlarm()) {
-				Toast.makeText(context, "Time to wake up", Toast.LENGTH_LONG).show();
-                context.sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
-                BluetoothRC.getInstance(context).sendData("2");
+				BluetoothRC.getInstance(context).sendData(Utilities.ARDUINO_ALARM_GET_STATE);
 			}
 
+
+
 		}
+
 
 
 	class ConnectingTask extends AsyncTask {

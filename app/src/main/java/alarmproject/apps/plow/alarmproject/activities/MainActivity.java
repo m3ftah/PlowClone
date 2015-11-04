@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Observable;
+import java.util.Observer;
 
 import alarmproject.apps.plow.alarmproject.Controller.AlarmController;
 import alarmproject.apps.plow.alarmproject.Controller.DateController;
@@ -37,9 +40,12 @@ import alarmproject.apps.plow.alarmproject.model.Alarm;
 import alarmproject.apps.plow.alarmproject.model.DateCalendar;
 import alarmproject.apps.plow.alarmproject.model.NavigationDrawerFragment;
 import alarmproject.apps.plow.alarmproject.model.Time;
+import alarmproject.apps.plow.alarmproject.model.Utilities;
+import app.plow.bluetooth.BluetoothRC;
+import app.plow.bluetooth.BluetoothService;
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,Observer {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -84,6 +90,9 @@ public class MainActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
+
+        BluetoothRC blrc = BluetoothRC.getInstance(this);
+        blrc.addObserver(this);
         /*final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         boolean is_first = prefs.getBoolean("is_first",
@@ -116,6 +125,40 @@ public class MainActivity extends ActionBarActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if (observable instanceof BluetoothRC){
+            final String str = (String) data;
+            Log.d("obs", "observed");
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    switch (str)
+                    {
+                        case (Utilities.ARDUINO_HEAD_OFF):
+                            // ask for time registred
+                            break;
+                        case (Utilities.ARDUINO_HEAD_ON):
+                            // search according to time if there is an alarm in the peiode after (N/D)
+                            startActivity(new Intent(getApplicationContext(), AskActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            break;
+                        case (Utilities.ARDUINO_ALARM_TIME_HEAD_OFF) :
+                            // alarming using the alarm
+                            //fill the stats
+                            break;
+                        case (Utilities.ARDUINO_ALARM_TIME_HEAD_ON) :
+                            Toast.makeText(getBaseContext(), "Time to wake up", Toast.LENGTH_LONG).show();
+                            sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
+                            BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_VIBRATE);
+                            //fill the stats
+                            break;
+                    }
+                    Toast.makeText(MainActivity.this, " received : " + str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
