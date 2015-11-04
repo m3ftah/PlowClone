@@ -26,6 +26,7 @@ struct Timing{
   byte m2;
 };
 Timing timings[20] = {};
+Timing timeTemp = {};
 byte index = 0;
 void setup() {
     // sets the pins mode
@@ -42,6 +43,14 @@ void loop() {
   if (millis() - timeref1 > timeout1){
     timeref1 = millis();
     if (digitalRead(plow) != state){
+      if (state){
+          timeTemp.h1 = hour();
+          timeTemp.m1 = minute();
+      }else{
+          timeTemp.h2 = hour();
+          timeTemp.m2 = minute();
+          addTime();
+      }
       state = !state;
       repport();
     }
@@ -53,6 +62,17 @@ void loop() {
       vibror(vibroNum);
     }else if (btRead =='3') {
       repport();
+    }else if (btRead =='t'){
+      String str="";
+      delay(10);
+      while (btSerial.available() > 0){
+        delay(10);
+        str += (char)btSerial.read();
+      }
+      
+      time(str);
+      //btSerial.println(str);
+      //btSerial.println(hour());
     }
   }
 }
@@ -77,20 +97,41 @@ void repport(){
   }else{
       btSerial.print("0");
   }
+  btSerial.print(getStats());
 }
 /*
  * Set Time from a string
  */
 void time(String str){
     int hour = str.substring(0,2).toInt();
-    int minute = str.substring(2,4).toInt();
+    int minute = str.substring(3,5).toInt();
     setTime(hour,minute,0,1,1,14);
 }
 /*
  * Utilities for the table
  */
-void add(struct Timing t){
-  timings[index] = t;
+void addTime(){
+  timings[index] = timeTemp;
   index++;
+}
+/*
+ * Gets stats from timings table
+ */
+String getStats(){
+  String stats = "";
+  int i = 0;
+  for (i=0;i<index;i++){
+    stats +=timings[i].h1;
+    stats +=":";
+    stats +=timings[i].m1;
+    stats += ",";
+    stats +=timings[i].h2;
+    stats +=":";
+    stats +=timings[i].m2;
+    stats +=";";
+  }
+  index = 0;
+  return stats;
+  
 }
 

@@ -6,12 +6,16 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
@@ -118,16 +122,23 @@ public class BluetoothRC extends Observable  {
         }
     }
     public String receiveData() {
-        String str = null;
+        String str = "";
         try {
-            int a = inStream.read();
-            a -= 48;
-            str = String.valueOf(a);
+            byte[] buffer = new byte[256];
+            int bytes = inStream.read(buffer);
+            str = new String(buffer, 0, bytes);
             Log.d(TAG, "received " + str);
+            //sendData("t"+getCurrentTimeStamp());
         } catch (IOException e) {
             Log.d(TAG,"erreur receiving Data");
         }
         return str;
+    }
+    public static String getCurrentTimeStamp() {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm");//dd/MM/yyyy
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        return strDate;
     }
     public void startListening(){
         task = new AsyncTask() {
