@@ -2,28 +2,20 @@ package alarmproject.apps.plow.alarmproject.receivers;
 
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import alarmproject.apps.plow.alarmproject.Controller.DateController;
 import alarmproject.apps.plow.alarmproject.R;
-import alarmproject.apps.plow.alarmproject.activities.MainActivity;
-import alarmproject.apps.plow.alarmproject.model.Alarm;
-import alarmproject.apps.plow.alarmproject.model.DateCalendar;
 import app.plow.bluetooth.BluetoothRC;
-import app.plow.PrincipalActivity;
 import app.plow.bluetooth.BluetoothService;
 
 public class AlarmReceiver extends BroadcastReceiver {

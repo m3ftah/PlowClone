@@ -27,11 +27,6 @@ import butterknife.OnClick;
 public class Pairing extends Activity implements Observer {
     public static String TAG = Pairing.class.getSimpleName();
     @Bind(R.id.retry)    Button retry;
-    @OnClick(R.id.retry)
-    public void retry(){
-
-        new ConnectingTask().execute();
-    }
 
     @Override
     public void update(Observable observable, Object data) {
@@ -51,25 +46,6 @@ public class Pairing extends Activity implements Observer {
         }
     }
 
-    class ConnectingTask extends AsyncTask{
-        @Override
-        protected Object doInBackground(Object[] params) {
-            BluetoothRC blrc = BluetoothRC.getInstance(Pairing.this);
-            if (blrc.connect()){
-                startActivity(new Intent(Pairing.this, MainActivity.class));
-            }else{
-                Pairing.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(Pairing.this, "Connection echoue", Toast.LENGTH_SHORT).show();
-                        retry.setVisibility(View.VISIBLE);
-                        //Pairing.this.finish();
-                    }
-                });
-            }
-            return null;
-        }
-    };
     private BluetoothRC blrc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +61,6 @@ public class Pairing extends Activity implements Observer {
     @Override
     protected void onResume() {
         super.onResume();
-        sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
-
+        sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver"));
     }
 }

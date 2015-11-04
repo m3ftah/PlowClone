@@ -36,7 +36,8 @@ public class BluetoothRC extends Observable  {
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // Insert your bluetooth devices MAC address
-    private static String address = "20:14:05:06:21:16";
+    //private static String address = "20:14:05:06:21:16";Old Bluetooth
+    private static String address = "20:15:07:21:02:03";//Pairing: 1234
 
 
     public static BluetoothRC getInstance(Context context){
@@ -59,14 +60,6 @@ public class BluetoothRC extends Observable  {
             long ref = System.currentTimeMillis();
             while( System.currentTimeMillis() - ref < 6000) continue;
         }
-    }
-
-    public void onResume(){
-        Log.d(TAG, "...In onResume - Attempting client connect...");
-        //checkBTState();
-        if (!connected)
-            connect();
-
     }
 
     public boolean connect() {
@@ -113,14 +106,6 @@ public class BluetoothRC extends Observable  {
     public void onPause(){
         Log.d(TAG, "...In onPause()...");
         connected = false;
-        /*if (outStream != null) {
-            try {
-                outStream.flush();
-            } catch (IOException e) {
-                Log.d(TAG, "In onPause() and failed to flush output stream: ");
-            }
-        }*/
-
         try {
             btSocket.close();
         } catch (IOException e2) {
@@ -130,7 +115,6 @@ public class BluetoothRC extends Observable  {
 
     public  void sendData(String message) {
         byte[] msgBuffer = message.getBytes();
-
         Log.d(TAG, "...Sending data: " + message + "...");
         try {
             outStream.write(msgBuffer);
@@ -155,30 +139,22 @@ public class BluetoothRC extends Observable  {
             @Override
             protected Object doInBackground(Object[] params) {
                 try {
-
                     while (btSocket.isConnected()) {
                         while (inStream.available() == 0) {
                             if (!isConnected()){
                                 Log.d("stateConnection", "Disconnected");
                                 onPause();
-                                    /*context.startService(new Intent(
-                                            context.getApplicationContext(),BluetoothService.class
-                                    ));
-                                    long ref = System.currentTimeMillis();
-                                    while( System.currentTimeMillis() - ref < 2000) continue;*/
                                 BluetoothService.connected = false;
                                 BluetoothRC blrc = BluetoothRC.getInstance(context);
                                 if (!BluetoothService.connected) while(!blrc.connect()) continue;
                             }
-
                         }
                         final String str = receiveData();
                         Log.d(TAG, "Data Received: " + str);
                         BluetoothRC.this.notifyObservers(str);
-
                     }
                 }catch(IOException e){
-                    // e.printStackTrace();
+                    Log.e(TAG, e.getMessage());
                 }
 
                 return null;
@@ -199,7 +175,6 @@ public class BluetoothRC extends Observable  {
     public void addObserver(Observer observer) {
         this.observers.add(observer);
     }
-
 
     public boolean isConnected() {
         long ref = System.currentTimeMillis();
