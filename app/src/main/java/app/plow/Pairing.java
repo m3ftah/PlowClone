@@ -61,6 +61,8 @@ public class Pairing extends Activity implements Observer {
     @Override
     protected void onResume() {
         super.onResume();
-        sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver"));
+        if (blrc !=null && blrc.isConnected())
+            startActivity(new Intent(this, MainActivity.class));
+        else sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver"));
     }
 }

@@ -105,12 +105,7 @@ public class BluetoothRC extends Observable  {
 
     public void onPause(){
         Log.d(TAG, "...In onPause()...");
-        connected = false;
-        try {
-            btSocket.close();
-        } catch (IOException e2) {
-            Log.d(TAG, "In onPause() and failed to close socket.");
-        }
+        disconnect();
     }
 
     public  void sendData(String message) {
@@ -141,7 +136,7 @@ public class BluetoothRC extends Observable  {
                 try {
                     while (btSocket.isConnected()) {
                         while (inStream.available() == 0) {
-                            if (!isConnected()){
+                            if (!sendChallenge()){
                                 Log.d("stateConnection", "Disconnected");
                                 onPause();
                                 BluetoothService.connected = false;
@@ -176,7 +171,7 @@ public class BluetoothRC extends Observable  {
         this.observers.add(observer);
     }
 
-    public boolean isConnected() {
+    public boolean sendChallenge() {
         long ref = System.currentTimeMillis();
         while( System.currentTimeMillis() - ref < 2000) continue;
         try {
@@ -186,5 +181,19 @@ public class BluetoothRC extends Observable  {
             return false;
         }
         return true;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void disconnect(){
+        Log.d(TAG, "...In disonnect()...");
+        connected = false;
+        try {
+            btSocket.close();
+        } catch (IOException e2) {
+            Log.d(TAG, "In onPause() and failed to close socket.");
+        }
     }
 }
