@@ -12,11 +12,12 @@
 #include "Time.h"
 const int TX_BT=10;
 const int RX_BT=11;
+const char STATE_ON = '0', STATE_OFF = '1', HEAD_ON = '3', HEAD_OFF = '4', ALARM_ALERT = 'x',ALARM_START = 'a';
 
 SoftwareSerial btSerial(TX_BT,RX_BT);
 
 int plow = 3, state = 0, waiting = 1000;
-byte vibroNum = 6, vibrorPin = 12;
+byte vibroNum = 25000, vibrorPin = 12;
 unsigned long timeout1 = 3000, timeref1 = 0;
 
 struct Timing{
@@ -43,7 +44,7 @@ void loop() {
   if (millis() - timeref1 > timeout1){
     timeref1 = millis();
     if (digitalRead(plow) != state){
-      if (state){
+      if (digitalRead(plow)){
           timeTemp.h1 = hour();
           timeTemp.m1 = minute();
       }else{
@@ -52,36 +53,56 @@ void loop() {
           addTime();
       }
       state = !state;
-      repport();
+      repportChange();
     }
   }
-  //if some data received, read it, vibrate, report or ignore.
+  //if some data received, read it and proceed with the orders.
   if(btSerial.available() > 0){
     char btRead = btSerial.read();
-    if (btRead == '2'){
-      vibror(vibroNum);
-    }else if (btRead =='3') {
-      repport();
-    }else if (btRead =='t'){
-      String str="";
-      delay(10);
-      while (btSerial.available() > 0){
-        delay(10);
-        str += (char)btSerial.read();
-      }
-      
-      time(str);
-      //btSerial.println(str);
-      //btSerial.println(hour());
+    switch(btRead){
+      case '2' : 
+                if (digitalRead(plow)){
+                  vibror();
+                  btSerial.print(ALARM_START);
+                }else{
+                  btSerial(ALARM_ALERT);
+                }
+        break;
+      case 'g' : // Send the state of the Plow
+                repport();
+        break;
+      case 't' ://Get Time from Android phone/Teblet
+                String str="";
+                delay(10);
+                while (btSerial.available() > 0){
+                  delay(10);
+                  str += (char)btSerial.read();
+                }
+                time(str);
+       break;
+      case 's' :
+                btSerial.print(getStats());
+       break;
+      case 'v' :
+                String str="";
+                delay(10);
+                while (btSerial.available() > 0){
+                  delay(10);
+                  str += (char)btSerial.read();
+                }
+                vibroNum = str.toInt()*1000;
+       break;
+      default : break;
     }
   }
 }
 /*
  * Vibrate 'num' times for 'waiting'ms
  */
-void vibror(byte num){
+void vibror(){
   byte i = 0;
-  for (i=0; i<num; i++){
+  unsigned long ref = millis();
+  while (digitalRead(plow) && millis() - ref > vibroNum){
     digitalWrite(vibrorPin,1);
     delay(waiting);
     digitalWrite(vibrorPin,0);
@@ -89,15 +110,22 @@ void vibror(byte num){
   }
 }
 /*
- * Repport to bluetooth by "0" or "1"
+ * Repport to bluetooth the state of plow on demand
  */
 void repport(){
-  if ( digitalRead(plow)){
-      btSerial.print("1");
-  }else{
-      btSerial.print("0");
-  }
-  btSerial.print(getStats());
+  if (digitalRead(plow)) 
+    btSerial.print(HEAD_ON);
+  else 
+    btSerial.print(HEAD_OFF);
+}
+/*
+ * Repport to bluetooth the state of plow in case of change
+ */
+void repportChange(){
+  if (digitalRead(plow)) 
+    btSerial.print(STATE_ON);
+  else 
+    btSerial.print(STATE_OFF);
 }
 /*
  * Set Time from a string
@@ -105,7 +133,7 @@ void repport(){
 void time(String str){
     int hour = str.substring(0,2).toInt();
     int minute = str.substring(3,5).toInt();
-    setTime(hour,minute,0,1,1,14);
+    setTime(hour,minute,0,10,11,15);
 }
 /*
  * Utilities for the table
