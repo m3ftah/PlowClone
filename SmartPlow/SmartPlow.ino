@@ -58,6 +58,7 @@ void loop() {
   }
   //if some data received, read it and proceed with the orders.
   if(btSerial.available() > 0){
+    String str = "";
     char btRead = btSerial.read();
     switch(btRead){
       case '2' : 
@@ -65,14 +66,14 @@ void loop() {
                   vibror();
                   btSerial.print(ALARM_START);
                 }else{
-                  btSerial(ALARM_ALERT);
+                  btSerial.print(ALARM_ALERT);
                 }
         break;
       case 'g' : // Send the state of the Plow
                 repport();
         break;
       case 't' ://Get Time from Android phone/Teblet
-                String str="";
+                str="";
                 delay(10);
                 while (btSerial.available() > 0){
                   delay(10);
@@ -84,7 +85,7 @@ void loop() {
                 btSerial.print(getStats());
        break;
       case 'v' :
-                String str="";
+                str="";
                 delay(10);
                 while (btSerial.available() > 0){
                   delay(10);
@@ -92,7 +93,6 @@ void loop() {
                 }
                 vibroNum = str.toInt()*1000;
        break;
-      default : break;
     }
   }
 }
