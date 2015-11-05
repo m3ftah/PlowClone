@@ -43,6 +43,7 @@ import app.plow.bluetooth.BluetoothRC;
 public class AskActivity extends ActionBarActivity  {
     TextView tv_ask;
     ImageButton btn_voice;
+    BluetoothRC blrc;
 
 
     private MediaPlayer mp;
@@ -55,6 +56,10 @@ public class AskActivity extends ActionBarActivity  {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ask);
+
+
+        blrc = BluetoothRC.getInstance(this);
+
 
         tv_ask =(TextView) findViewById(R.id.tv_help);
         btn_voice =(ImageButton) findViewById(R.id.btn_voice);
@@ -108,7 +113,7 @@ public class AskActivity extends ActionBarActivity  {
                     {
                         if (result.get(0).equalsIgnoreCase(getString(R.string.speech_add_no)))
                         {
-                            // disconnect bluetooth and start an other service
+                            // start the other service
                             finish();
                         }
                         else if (result.get(0).equalsIgnoreCase(getString(R.string.speech_add_yes)))
@@ -129,7 +134,6 @@ public class AskActivity extends ActionBarActivity  {
                         {
                             action(Integer.parseInt(result.get(0).toLowerCase().split(":")[0]), Integer.parseInt(result.get(0).toLowerCase().split(":")[1]));
                             tv_ask.setText(getString(R.string.speech_okey));
-                            // disconnect bluetooth
                             finish();
                         }
                         else {

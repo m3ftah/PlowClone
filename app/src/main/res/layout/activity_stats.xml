@@ -10,6 +10,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="lecho.lib.hellocharts.samples.PreviewLineChartActivity$PlaceholderFragment" >
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_time_slept"
+            android:id="@+id/btn_slept"
+            android:background="@null"
+            android:layout_weight="1"
+            android:textColor="@color/primary_dark" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_time_wake"
+            android:id="@+id/btn_woke"
+            android:background="@null"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart_top"
         android:layout_width="match_parent"

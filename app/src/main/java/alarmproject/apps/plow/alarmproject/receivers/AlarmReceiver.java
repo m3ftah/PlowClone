@@ -27,7 +27,6 @@ import alarmproject.apps.plow.alarmproject.model.Alarm;
 import alarmproject.apps.plow.alarmproject.model.DateCalendar;
 import alarmproject.apps.plow.alarmproject.model.Utilities;
 import app.plow.bluetooth.BluetoothRC;
-import app.plow.PrincipalActivity;
 import app.plow.bluetooth.BluetoothService;
 
 public class AlarmReceiver extends BroadcastReceiver{

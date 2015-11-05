@@ -1,8 +1,10 @@
 package alarmproject.apps.plow.alarmproject.Fragments;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.hudomju.swipe.OnItemClickListener;
 import com.hudomju.swipe.SwipeToDismissTouchListener;
@@ -63,6 +66,9 @@ public class StatsFragment extends Fragment {
 
     private LineChartData lineData;
     private ColumnChartData columnData;
+
+
+    Button btn_woke;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +77,16 @@ public class StatsFragment extends Fragment {
 
         // *** TOP LINE CHART ***
         chartTop = (LineChartView) rootView.findViewById(R.id.chart_top);
+
+
+        btn_woke = (Button)rootView.findViewById(R.id.btn_woke);
+
+        btn_woke.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeGraph();
+            }
+        });
 
         days = new String[31];
 
@@ -242,4 +258,12 @@ public class StatsFragment extends Fragment {
         return arr;
     }
 
+    public void changeGraph()
+    {
+        android.support.v4.app.FragmentManager fragmentManager;
+            fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, new StatsWokeFragment())
+                    .commit();
+    }
 }

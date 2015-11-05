@@ -24,8 +24,10 @@ import android.widget.Toast;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -63,6 +65,7 @@ public class MainActivity extends ActionBarActivity
     public static MainActivity ac;
     public static Menu m;
     final static private long FIVE_SECONDS = 5000;
+    BluetoothRC blrc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,7 @@ public class MainActivity extends ActionBarActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-        BluetoothRC blrc = BluetoothRC.getInstance(this);
+        blrc = BluetoothRC.getInstance(this);
         blrc.addObserver(this);
         /*final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -138,20 +141,27 @@ public class MainActivity extends ActionBarActivity
                     switch (str)
                     {
                         case (Utilities.ARDUINO_HEAD_OFF):
-                            // ask for time registred
+                            blrc.sendData(Utilities.ARDUINO_ALARM_SEND_TIME+getCurrentTimeStamp());
+                            blrc.disconnect();
                             break;
                         case (Utilities.ARDUINO_HEAD_ON):
+
                             // search according to time if there is an alarm in the peiode after (N/D)
                             startActivity(new Intent(getApplicationContext(), AskActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            blrc.sendData(Utilities.ARDUINO_ALARM_SEND_TIME+getCurrentTimeStamp());
+                            blrc.disconnect();
                             break;
                         case (Utilities.ARDUINO_ALARM_TIME_HEAD_OFF) :
-                            // alarming using the alarm
-                            //fill the stats
+                            Utilities.playMusic(getBaseContext(),R.raw.alarm_song);
+                            BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
                             break;
                         case (Utilities.ARDUINO_ALARM_TIME_HEAD_ON) :
                             Toast.makeText(getBaseContext(), "Time to wake up", Toast.LENGTH_LONG).show();
                             sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
                             BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_VIBRATE);
+                            BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
+                            break;
+                        default:
                             //fill the stats
                             break;
                     }
@@ -159,6 +169,13 @@ public class MainActivity extends ActionBarActivity
                 }
             });
         }
+    }
+
+    public static String getCurrentTimeStamp() {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        return strDate;
     }
 
     @Override
@@ -294,6 +311,11 @@ public class MainActivity extends ActionBarActivity
                             .commit();
                 }
                 break;
+                case 3:
+                    Intent j = new Intent(getActivity().getBaseContext(),SettingsActivity.class);
+                    startActivity(j);
+                    getActivity().finish();
+                    break;
             }
             return rootView;
         }

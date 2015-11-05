@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,237 +37,117 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 public class StatsWokeFragment extends Fragment {
 
-    public final static String[] months = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
-            "Sep", "Oct", "Nov", "Dec",};
-
-    public static String[] days;
-
-    private LineChartView chartTop;
-    private ColumnChartView chartBottom;
-
-    private LineChartData lineData;
-    private ColumnChartData columnData;
 
 
-    Button btn_slept,btn_woke;
+    Button btn_slept;
+
+    private ColumnChartView chart;
+    private ColumnChartData data;
+    private boolean hasAxes = true;
+    private boolean hasAxesNames = false;
+    private boolean hasLabels = false;
+    private boolean hasLabelForSelected = false;
+
+    private boolean firstColor = true;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.activity_stats, container, false);
+        View rootView = inflater.inflate(R.layout.activity_stats_woke, container, false);
 
-        // *** TOP LINE CHART ***
-        chartTop = (LineChartView) rootView.findViewById(R.id.chart_top);
+        chart = (ColumnChartView) rootView.findViewById(R.id.chart);
+        chart.setOnValueTouchListener(new ValueTouchListener());
 
+        generateStackedData();
 
         btn_slept = (Button)rootView.findViewById(R.id.btn_slept);
-        btn_woke = (Button)rootView.findViewById(R.id.btn_woke);
-
-        btn_woke.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeGraph(false);
-            }
-        });
 
         btn_slept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeGraph(true);
+                changeGraph();
             }
         });
 
-        days = new String[31];
-
-        for (int i=0;i<31;i++) days[i]=""+i;
-
-        // Generate and set data for line chart
-        generateInitialLineData();
-
-        // *** BOTTOM COLUMN CHART ***
-
-        chartBottom = (ColumnChartView) rootView.findViewById(R.id.chart_bottom);
-
-        generateColumnData();
-
         return rootView;
+
     }
 
-    private void generateColumnData() {
-
-        int numSubcolumns = 1;
-        int numColumns = months.length;
-
-        List<AxisValue> axisValues = new ArrayList<AxisValue>();
+    private void generateStackedData() {
+        int numSubcolumns = 4;
+        int numColumns = 8;
+        // Column can have many stacked subcolumns, here I use 4 stacke subcolumn in each of 4 columns.
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
         for (int i = 0; i < numColumns; ++i) {
 
             values = new ArrayList<SubcolumnValue>();
-            ArrayList<Float> arr = getMinutesByMonth(getActivity());
             for (int j = 0; j < numSubcolumns; ++j) {
-                values.add(new SubcolumnValue(arr.get(j), ChartUtils.nextColor()));
+                if (firstColor) {
+                    values.add(new SubcolumnValue((float) Math.random() * 20f + 5, ChartUtils.COLOR_BLUE));
+                }
+                else {
+                    values.add(new SubcolumnValue((float) Math.random() * 20f + 5, ChartUtils.COLOR_GREEN));
+                }
+
+                firstColor=!firstColor;
+
             }
 
-            axisValues.add(new AxisValue(i).setLabel(months[i]));
-
-            columns.add(new Column(values).setHasLabelsOnlyForSelected(true));
+            Column column = new Column(values);
+            column.setHasLabels(hasLabels);
+            column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column);
         }
 
-        columnData = new ColumnChartData(columns);
+        data = new ColumnChartData(columns);
 
-        columnData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
-        columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(2));
+        // Set stacked flag.
+        data.setStacked(true);
 
-        chartBottom.setColumnChartData(columnData);
-
-        // Set value touch listener that will trigger changes for chartTop.
-        chartBottom.setOnValueTouchListener(new ValueTouchListener());
-
-        // Set selection mode to keep selected month column highlighted.
-        chartBottom.setValueSelectionEnabled(true);
-
-        chartBottom.setZoomType(ZoomType.HORIZONTAL);
-
-        // chartBottom.setOnClickListener(new View.OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // SelectedValue sv = chartBottom.getSelectedValue();
-        // if (!sv.isSet()) {
-        // generateInitialLineData();
-        // }
-        //
-        // }
-        // });
-
-    }
-
-    /**
-     * Generates initial data for line chart. At the begining all Y values are equals 0. That will change when user
-     * will select value on column chart.
-     */
-    private void generateInitialLineData() {
-        int numValues = 31;
-
-        List<AxisValue> axisValues = new ArrayList<AxisValue>();
-        List<PointValue> values = new ArrayList<PointValue>();
-        for (int i = 0; i < numValues; ++i) {
-            values.add(new PointValue(i, 0));
-            axisValues.add(new AxisValue(i).setLabel(days[i]));
+        if (hasAxes) {
+            Axis axisX = new Axis();
+            Axis axisY = new Axis().setHasLines(true);
+            if (hasAxesNames) {
+                axisX.setName("Axis X");
+                axisY.setName("Axis Y");
+            }
+            data.setAxisXBottom(axisX);
+            data.setAxisYLeft(axisY);
+        } else {
+            data.setAxisXBottom(null);
+            data.setAxisYLeft(null);
         }
 
-        Line line = new Line(values);
-        line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
-
-        List<Line> lines = new ArrayList<Line>();
-        lines.add(line);
-
-        lineData = new LineChartData(lines);
-        lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
-        lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
-
-        chartTop.setLineChartData(lineData);
-
-        // For build-up animation you have to disable viewport recalculation.
-        chartTop.setViewportCalculationEnabled(false);
-
-        // And set initial max viewport and current viewport- remember to set viewports after data.
-        Viewport v = new Viewport(0, 24, 31, 0);
-        chartTop.setMaximumViewport(v);
-        chartTop.setCurrentViewport(v);
-
-        chartTop.setZoomType(ZoomType.HORIZONTAL);
-    }
-
-    private void generateLineData(int color, int colom) {
-        // Cancel last animation if not finished.
-        chartTop.cancelDataAnimation();
-
-        // Modify data targets
-        Line line = lineData.getLines().get(0);// For this example there is always only one line.
-        line.setColor(color);
-        ArrayList<Float> arr = getMinutesByDay(getActivity().getBaseContext(),colom);
-        int j=0;
-        for (PointValue value : line.getValues()) {
-            // Change target only for Y value.
-            value.setTarget(value.getX(), arr.get(j));
-            j++;
-        }
-
-        // Start new data animation with 300ms duration;
-        chartTop.startDataAnimation(300);
+        chart.setColumnChartData(data);
     }
 
     private class ValueTouchListener implements ColumnChartOnValueSelectListener {
 
         @Override
         public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-            generateLineData(value.getColor(), columnIndex);
+            Toast.makeText(getActivity(), "Selected: " + value, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onValueDeselected() {
-
-            generateLineData(ChartUtils.COLOR_GREEN, 0);
+            // TODO Auto-generated method stub
 
         }
-    }
-
-    public ArrayList<Float> getMinutesByMonth(Context context)
-    {
-        Calendar now = Calendar.getInstance();
-
-        ArrayList<Float> arr = new ArrayList<Float>();
-        final SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
-
-        for (int i=0;i<12;i++)
-        {
-            arr.add(prefs.getFloat("stats_"+now.get(Calendar.YEAR)+"_" + (i + 1), 0f)+(float) Math.random() * 50f + 5);
-        }
-
-        return arr;
 
     }
 
-    public ArrayList<Float> getMinutesByDay(Context context,int month)
-    {
-        Calendar now = Calendar.getInstance();
-
-        ArrayList<Float> arr = new ArrayList<Float>();
-        final SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
-
-        for (int i=0;i<31;i++)
-        {
-            arr.add(prefs.getFloat("stats_"+now.get(Calendar.YEAR)+"_" + month+"_"+i, 0f)+(float) Math.random() * 10f + 5);
-        }
-
-        return arr;
-    }
-
-    public void changeGraph(Boolean isSleptOn)
+    public void changeGraph()
     {
         android.support.v4.app.FragmentManager fragmentManager;
-        if (isSleptOn)
-        {
+
             btn_slept.setTextColor(getResources().getColor(R.color.primary_dark));
-            btn_woke.setTextColor(Color.BLACK);
             fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, new CalendarFragment())
+                    .replace(R.id.container, new StatsFragment())
                     .commit();
 
-        }
-        else
-        {
-            btn_woke.setTextColor(getResources().getColor(R.color.primary_dark));
-            btn_slept.setTextColor(Color.BLACK);
-            fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new CalendarFragment())
-                    .commit();
-        }
+
     }
 }

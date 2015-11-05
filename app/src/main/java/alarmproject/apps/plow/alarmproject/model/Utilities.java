@@ -18,8 +18,11 @@ public class Utilities {
     public static final String ARDUINO_HEAD_OFF="0";
     public static final String ARDUINO_ALARM_TIME_HEAD_ON="3";
     public static final String ARDUINO_ALARM_TIME_HEAD_OFF="4";
-    public static final String ARDUINO_ALARM_GET_STATE="t";
+    public static final String ARDUINO_ALARM_GET_STATE="g";
+    public static final String ARDUINO_ALARM_GET_STATISTCS="s";
+    public static final String ARDUINO_ALARM_SEND_TIME="t";
     public static final String ARDUINO_VIBRATE="2";
+    public static final String ARDUINO_VIBRATE_DUREE="v";
     public static void setFontText(Context c, TextView tv) {
         Typeface font = Typeface.createFromAsset(c.getAssets(),
                 "AppFonts/" +fontInUse);

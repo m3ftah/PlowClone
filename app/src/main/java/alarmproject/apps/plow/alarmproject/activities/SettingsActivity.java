@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBarActivity;
 
+import alarmproject.apps.plow.alarmproject.R;
+
 /**
  * Simple Activity to display example preferences.
  *

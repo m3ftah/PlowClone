@@ -21,8 +21,7 @@
             android:text="@string/text_time_slept"
             android:id="@+id/btn_slept"
             android:background="@null"
-            android:layout_weight="1"
-            android:textColor="@color/primary_dark" />
+            android:layout_weight="1" />
 
         <Button
             android:layout_width="wrap_content"
@@ -30,28 +29,14 @@
             android:text="@string/text_time_wake"
             android:id="@+id/btn_woke"
             android:background="@null"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@color/primary_dark" />
     </LinearLayout>
 
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/chart_top"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
-    </lecho.lib.hellocharts.view.LineChartView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/darker_gray" />
-
     <lecho.lib.hellocharts.view.ColumnChartView
-        android:id="@+id/chart_bottom"
+        android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_height="match_parent" >
     </lecho.lib.hellocharts.view.ColumnChartView>
 
 </LinearLayout>
