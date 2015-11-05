@@ -14,7 +14,7 @@ public class MyStartServiceReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("starter","Server Starter has received a broadcast");
-        Intent service = new Intent(context.getApplicationContext(), BluetoothService.class);
+        Intent service = new Intent(context, BluetoothService.class);
         context.startService(service);
         Toast.makeText(context,"Service Restarted",Toast.LENGTH_SHORT).show();
     }

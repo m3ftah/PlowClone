@@ -46,11 +46,8 @@ public class BluetoothService extends Service implements Observer{
                 blrc.addObserver(BluetoothService.this);
                 if (!BluetoothService.connected) while(!blrc.connect()) continue;
                 BluetoothService.connected = true;
-                //blrc.sendData("2");
                 blrc.startListening();
-
-                startActivity(new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-
+                startActivity(new Intent(getApplicationContext(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 //publishResults("ready", Activity.RESULT_OK);
                 return null;
             }

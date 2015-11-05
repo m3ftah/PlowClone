@@ -33,13 +33,6 @@
         </receiver>
 
         <activity
-            android:name="app.plow.PrincipalActivity"
-            android:label="@string/app_name">
-
-
-        </activity>
-
-        <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name">
 

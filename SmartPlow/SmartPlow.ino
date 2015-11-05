@@ -9,6 +9,7 @@
  */
 
 #include "SoftwareSerial.h"
+#include "Time.h"
 const int TX_BT=10;
 const int RX_BT=11;
 
@@ -18,6 +19,14 @@ int plow = 3, state = 0, waiting = 1000;
 byte vibroNum = 6, vibrorPin = 12;
 unsigned long timeout1 = 3000, timeref1 = 0;
 
+struct Timing{
+  byte h1;
+  byte m1;
+  byte h2;
+  byte m2;
+};
+Timing timings[20] = {};
+byte index = 0;
 void setup() {
     // sets the pins mode
     pinMode(vibrorPin,OUTPUT);    
@@ -69,3 +78,19 @@ void repport(){
       btSerial.print("0");
   }
 }
+/*
+ * Set Time from a string
+ */
+void time(String str){
+    int hour = str.substring(0,2).toInt();
+    int minute = str.substring(2,4).toInt();
+    setTime(hour,minute,0,1,1,14);
+}
+/*
+ * Utilities for the table
+ */
+void add(struct Timing t){
+  timings[index] = t;
+  index++;
+}
+
