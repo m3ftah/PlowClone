@@ -17,7 +17,7 @@ const char STATE_ON = '0', STATE_OFF = '1', HEAD_ON = '3', HEAD_OFF = '4', ALARM
 SoftwareSerial btSerial(TX_BT,RX_BT);
 
 int plow = 3, state = 0, waiting = 1000;
-byte vibroNum = 25000, vibrorPin = 12;
+byte vibroNum = 250000, vibrorPin = 12;
 unsigned long timeout1 = 3000, timeref1 = 0;
 
 struct Timing{
@@ -64,10 +64,11 @@ void loop() {
       case '2' : 
                 if (digitalRead(plow)){
                   vibror();
-                  btSerial.print(ALARM_START);
+                }
+                 /* btSerial.print(ALARM_START);
                 }else{
                   btSerial.print(ALARM_ALERT);
-                }
+                }*/
         break;
       case 'g' : // Send the state of the Plow
                 repport();
@@ -102,7 +103,8 @@ void loop() {
 void vibror(){
   byte i = 0;
   unsigned long ref = millis();
-  while (digitalRead(plow) && millis() - ref > vibroNum){
+  
+  while (digitalRead(plow)){ //&& millis() - ref <= vibroNum){
     digitalWrite(vibrorPin,1);
     delay(waiting);
     digitalWrite(vibrorPin,0);

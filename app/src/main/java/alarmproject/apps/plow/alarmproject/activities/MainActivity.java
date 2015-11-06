@@ -153,13 +153,13 @@ public class MainActivity extends ActionBarActivity
                             break;
                         case (Utilities.ARDUINO_ALARM_TIME_HEAD_OFF) :
                             Utilities.playMusic(getBaseContext(),R.raw.alarm_song);
-                            BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
+                            //BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
                             break;
                         case (Utilities.ARDUINO_ALARM_TIME_HEAD_ON) :
                             Toast.makeText(getBaseContext(), "Time to wake up", Toast.LENGTH_LONG).show();
-                            sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
+                            //sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
                             BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_VIBRATE);
-                            BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
+                            //BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
                             break;
                         default:
                             //fill the stats

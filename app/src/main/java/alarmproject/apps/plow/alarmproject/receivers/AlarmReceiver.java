@@ -63,7 +63,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 
 			DateController dt= new DateController(context);
 			if (dt.isNowFirstAlarm()) {
-				BluetoothRC.getInstance(context).sendData("2");
+				BluetoothRC.getInstance(context).sendData(Utilities.ARDUINO_ALARM_GET_STATE);
 			}
 
 
