@@ -235,7 +235,7 @@ public class StatsFragment extends Fragment {
 
         for (int i=0;i<12;i++)
         {
-            arr.add(prefs.getFloat("stats_"+now.get(Calendar.YEAR)+"_" + (i + 1), 0f)+(float) Math.random() * 50f + 5);
+            arr.add(prefs.getFloat("stats_"+now.get(Calendar.YEAR)+"_" + (i + 1), 0f)+(float) Math.random() * 200f + 150);
         }
 
         return arr;
@@ -252,7 +252,7 @@ public class StatsFragment extends Fragment {
 
         for (int i=0;i<31;i++)
         {
-            arr.add(prefs.getFloat("stats_"+now.get(Calendar.YEAR)+"_" + month+"_"+i, 0f)+(float) Math.random() * 10f + 5);
+            arr.add(prefs.getFloat("stats_"+now.get(Calendar.YEAR)+"_" + month+"_"+i, 0f)+(float) Math.random() * 7f + 5);
         }
 
         return arr;

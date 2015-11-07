@@ -1,33 +1,18 @@
 package alarmproject.apps.plow.alarmproject.activities;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.preference.PreferenceActivity;
 
 import alarmproject.apps.plow.alarmproject.R;
 
 /**
- * Simple Activity to display example preferences.
- *
- * Created by jenzz on 28/01/15.
+ * Created by YouNesS on 07/11/2015.
  */
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends PreferenceActivity {
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    if (savedInstanceState == null) {
-      getFragmentManager().beginTransaction()
-          .add(android.R.id.content, new SettingsFragment())
-          .commit();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.activity_preferences);
     }
-  }
-
-  public static class SettingsFragment extends PreferenceFragment {
-
-    @Override public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      addPreferencesFromResource(R.xml.prefs);
-    }
-  }
 }

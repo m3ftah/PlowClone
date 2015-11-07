@@ -36,19 +36,23 @@ public class AlarmReceiver extends BroadcastReceiver{
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
-		final SharedPreferences prefs = PreferenceManager
+
+		//Toast.makeText(context,"hi",Toast.LENGTH_LONG).show();
+
+
+		/*final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
 
 
 		pi = PendingIntent.getBroadcast(context, 0, new Intent(
 				context.getResources().getString(R.string.service_alarm_manager)), 0);
-		am = (AlarmManager) (context.getSystemService(Context.ALARM_SERVICE));
+		//am = (AlarmManager) (context.getSystemService(Context.ALARM_SERVICE));
 
-		boolean one_min = Boolean.parseBoolean(prefs.getString("one_minute",
+
+		/*boolean one_min = Boolean.parseBoolean(prefs.getString("one_minute",
 				"false"));
 		if (!one_min) {
-			Calendar cal = Calendar.getInstance();
-			int sec = cal.get(Calendar.SECOND);
+
 
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putString("one_minute", "true");
@@ -59,7 +63,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 		} else {
 			am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 					SystemClock.elapsedRealtime() + ONE_MINUTE, pi);
-		}
+		}*/
 
 			DateController dt= new DateController(context);
 			if (dt.isNowFirstAlarm()) {

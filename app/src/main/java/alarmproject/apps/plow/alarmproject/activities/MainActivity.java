@@ -6,8 +6,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -43,6 +45,7 @@ import alarmproject.apps.plow.alarmproject.model.DateCalendar;
 import alarmproject.apps.plow.alarmproject.model.NavigationDrawerFragment;
 import alarmproject.apps.plow.alarmproject.model.Time;
 import alarmproject.apps.plow.alarmproject.model.Utilities;
+import alarmproject.apps.plow.alarmproject.receivers.AlarmReceiver;
 import app.plow.bluetooth.BluetoothRC;
 import app.plow.bluetooth.BluetoothService;
 
@@ -58,6 +61,7 @@ public class MainActivity extends ActionBarActivity
     public static TimeController timeController;
     PendingIntent pi;
     AlarmManager am;
+    final static private long ONE_MINUTE = 60000;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -96,17 +100,17 @@ public class MainActivity extends ActionBarActivity
 
         blrc = BluetoothRC.getInstance(this);
         blrc.addObserver(this);
-        /*final SharedPreferences prefs = PreferenceManager
+        final SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         boolean is_first = prefs.getBoolean("is_first",
                 true);
         if (is_first)
-        {*/
+        {
             setup();
-           /* SharedPreferences.Editor editor = prefs.edit();
+            SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("is_first", false);
             editor.commit();
-        }*/
+        }
 
     }
 
@@ -141,8 +145,8 @@ public class MainActivity extends ActionBarActivity
                     switch (str)
                     {
                         case (Utilities.ARDUINO_HEAD_OFF):
-                            blrc.sendData(Utilities.ARDUINO_ALARM_SEND_TIME+getCurrentTimeStamp());
-                            blrc.disconnect();
+                            blrc.sendData(Utilities.ARDUINO_ALARM_SEND_TIME + getCurrentTimeStamp());
+                            //blrc.disconnect();
                             break;
                         case (Utilities.ARDUINO_HEAD_ON):
 
@@ -152,14 +156,14 @@ public class MainActivity extends ActionBarActivity
                             blrc.disconnect();
                             break;
                         case (Utilities.ARDUINO_ALARM_TIME_HEAD_OFF) :
-                            Utilities.playMusic(getBaseContext(),R.raw.alarm_song);
-                            BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
+                            Utilities.playMusic(getBaseContext(), R.raw.alarm_song);
+                            //BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
                             break;
                         case (Utilities.ARDUINO_ALARM_TIME_HEAD_ON) :
                             Toast.makeText(getBaseContext(), "Time to wake up", Toast.LENGTH_LONG).show();
                             sendBroadcast(new Intent("app.plow.bluetooth.ServiceReceiver").putExtra(BluetoothService.FILEPATH, "restart"));
                             BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_VIBRATE);
-                            BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
+                            //BluetoothRC.getInstance(getBaseContext()).sendData(Utilities.ARDUINO_ALARM_GET_STATISTCS);
                             break;
                         default:
                             //fill the stats
@@ -331,14 +335,21 @@ public class MainActivity extends ActionBarActivity
     public void setup()
     {
 
-        pi = PendingIntent.getBroadcast(this, 0, new Intent(
-                getString(R.string.service_alarm_manager)), 0);
-        am = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
-        // cette instruction est pour activer le premier appel du
-        // broadcastReciever
-        am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + FIVE_SECONDS, pi);
+        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        am = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE) + 1);
+        cal.set(Calendar.SECOND, 0);
+
+        Toast.makeText(getBaseContext(),cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND),Toast.LENGTH_SHORT).show();
+
+
+        am.setInexactRepeating(AlarmManager.RTC, cal.getTimeInMillis(),
+                1000 * 60, pendingIntent);
     }
 
     public static void setMenuVisible(boolean b)

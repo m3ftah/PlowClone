@@ -56,7 +56,7 @@
     <string name="action_settings">Settings</string>
 
     <!--**************Services*****************-->
-    <string name="service_alarm_manager">plow.apps.alarming</string>
+    <string name="service_alarm_manager">com.example.AlarmExample</string>
     <string name="service_name">Service Bluetooth</string>
 
 
@@ -81,30 +81,104 @@
     <string name="text_time_wake">Time woke</string>
 
     <!--*****************test***************-->
+    <string name="pref_header_general">General</string>
+    <string name="pref_header_vibration">Vibration</string>
+    <string name="pref_header_alarm_check">Alarm check</string>
+    <string name="pref_title_alarm_reminder">Alarm reminder</string>
+    <string name="pref_title_language">language</string>
+    <string name="pref_language">Select your language</string>
 
-    <string name="original_category">Original Category</string>
-    <string name="original_preference">Original Preference</string>
-    <string name="original_checkbox_preference">Original CheckBox Preference</string>
-    <string name="original_summary">Original Summary</string>
-    <string name="original_summary_with_icon">Original Summary + Icon</string>
-    <string name="original_checkbox_key">original_checkbox_key</string>
-    <string name="original_checkbox_summary_on">Original CheckBox Summary On</string>
-    <string name="original_checkbox_summary_off">Original CheckBox Summary Off</string>
-    <string name="original_switch_preference">Original Switch Preference</string>
-    <string name="original_switch_preference_on">Original Switch Summary On</string>
-    <string name="original_switch_preference_off">Original Switch Summary Off</string>
+    <string-array name="pref_array_languages">
+        <item>Arabic</item>
+        <item>French</item>
+        <item>English</item>
+    </string-array>
 
-    <string name="material_category">Material Category</string>
-    <string name="material_preference">Material Preference</string>
-    <string name="material_checkbox_preference">Material CheckBox Preference</string>
-    <string name="material_summary">Material Summary</string>
-    <string name="material_summary_with_icon">Material Summary + Icon</string>
-    <string name="material_checkbox_key">material_checkbox_key</string>
-    <string name="material_checkbox_summary_on">Material CheckBox Summary On</string>
-    <string name="material_checkbox_summary_off">Material CheckBox Summary Off</string>
-    <string name="material_switch_preference">Material Switch Preference</string>
-    <string name="material_switch_preference_on">Material Switch Summary On</string>
-    <string name="material_switch_preference_off">Material Switch Summary Off</string>
+    <string-array name="pref_array_languages_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="pref_title_vibration_duration">Vibration duration</string>
+    <string name="pref_vibration_duration">Select the vibration duration</string>
+
+    <string-array name="pref_array_vibration_duration">
+        <item>25 s</item>
+        <item>35 s</item>
+        <item>45 s</item>
+        <item>1 m</item>
+    </string-array>
+
+    <string-array name="pref_array_vibration_duration_values">
+        <item>25</item>
+        <item>35</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
 
 
+    <string name="pref_title_vibration_power">Vibration power</string>
+    <string name="pref_vibration_power">Select the vibration power</string>
+
+    <string-array name="pref_array_vibration_power">
+        <item>1 V</item>
+        <item>2 V</item>
+        <item>3 V</item>
+        <item>4 V</item>
+        <item>5 V</item>
+    </string-array>
+
+    <string-array name="pref_array_vibration_power_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string name="pref_title_night">Night</string>
+    <string name="pref_night">Select the sleep average</string>
+
+    <string-array name="pref_array_night">
+        <item>4 h</item>
+        <item>5 h</item>
+        <item>6 h</item>
+        <item>7 h</item>
+        <item>8 h</item>
+        <item>9 h</item>
+        <item>10 h</item>
+    </string-array>
+
+    <string-array name="pref_array_night_values">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string name="pref_title_day">Day</string>
+    <string name="pref_day">Select the sleep average</string>
+
+    <string-array name="pref_array_day">
+        <item>1 h</item>
+        <item>2 h</item>
+        <item>3 h</item>
+        <item>4 h</item>
+        <item>5 h</item>
+    </string-array>
+
+    <string-array name="pref_array_day_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>

@@ -85,10 +85,10 @@ public class StatsWokeFragment extends Fragment {
             values = new ArrayList<SubcolumnValue>();
             for (int j = 0; j < numSubcolumns; ++j) {
                 if (firstColor) {
-                    values.add(new SubcolumnValue((float) Math.random() * 20f + 5, ChartUtils.COLOR_BLUE));
+                    values.add(new SubcolumnValue((float) Math.random() * 2f + 3, ChartUtils.COLOR_BLUE));
                 }
                 else {
-                    values.add(new SubcolumnValue((float) Math.random() * 20f + 5, ChartUtils.COLOR_GREEN));
+                    values.add(new SubcolumnValue((float) Math.random() * 0.5f + 0.1f, ChartUtils.COLOR_GREEN));
                 }
 
                 firstColor=!firstColor;

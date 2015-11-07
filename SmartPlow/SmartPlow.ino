@@ -16,8 +16,8 @@ const char STATE_ON = '0', STATE_OFF = '1', HEAD_ON = '3', HEAD_OFF = '4', ALARM
 
 SoftwareSerial btSerial(TX_BT,RX_BT);
 
-int plow = 3, state = 0, waiting = 1000;
-byte vibroNum = 25000, vibrorPin = 12;
+int plow = 3, state = 0, waiting = 20000;
+byte vibroNum = 100000, vibrorPin = 12;
 unsigned long timeout1 = 3000, timeref1 = 0;
 
 struct Timing{
@@ -59,20 +59,17 @@ void loop() {
   //if some data received, read it and proceed with the orders.
   if(btSerial.available() > 0){
     char btRead = btSerial.read();
+    String str="";
     switch(btRead){
       case '2' : 
-                if (digitalRead(plow)){
+                if (digitalRead(plow))
                   vibror();
-                  btSerial.print(ALARM_START);
-                }else{
-                  btSerial(ALARM_ALERT);
-                }
         break;
       case 'g' : // Send the state of the Plow
                 repport();
         break;
       case 't' ://Get Time from Android phone/Teblet
-                String str="";
+                str="";
                 delay(10);
                 while (btSerial.available() > 0){
                   delay(10);
@@ -84,7 +81,7 @@ void loop() {
                 btSerial.print(getStats());
        break;
       case 'v' :
-                String str="";
+                str="";
                 delay(10);
                 while (btSerial.available() > 0){
                   delay(10);
@@ -102,7 +99,7 @@ void loop() {
 void vibror(){
   byte i = 0;
   unsigned long ref = millis();
-  while (digitalRead(plow) && millis() - ref > vibroNum){
+  while (digitalRead(plow) && (millis() - ref) <= vibroNum){
     digitalWrite(vibrorPin,1);
     delay(waiting);
     digitalWrite(vibrorPin,0);

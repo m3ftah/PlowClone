@@ -1,0 +1,75 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="Gen" >
+
+    <PreferenceCategory
+        android:key="General"
+        android:title="@string/pref_header_general" >
+
+        <ListPreference
+            android:dialogTitle="@string/pref_title_language"
+            android:entries="@array/pref_array_languages"
+            android:entryValues="@array/pref_array_languages_values"
+            android:defaultValue="2"
+            android:key="language"
+            android:summary="@string/pref_language"
+            android:title="@string/pref_title_language" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="alarm_reminder"
+            android:title="@string/pref_title_alarm_reminder"
+            android:summaryOff="@string/no"
+            android:summaryOn="@string/yes"
+            />
+        </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="Vibration"
+        android:title="@string/pref_header_vibration" >
+
+        <ListPreference
+            android:dialogTitle="@string/pref_title_vibration_duration"
+            android:entries="@array/pref_array_vibration_duration"
+            android:entryValues="@array/pref_array_vibration_duration_values"
+            android:key="vibration_duration"
+            android:defaultValue="0"
+            android:summary="@string/pref_vibration_duration"
+            android:title="@string/pref_title_vibration_duration" />
+
+        <ListPreference
+            android:dialogTitle="@string/pref_title_vibration_power"
+            android:entries="@array/pref_array_vibration_power"
+            android:entryValues="@array/pref_array_vibration_power_values"
+            android:key="vibration_power"
+            android:defaultValue="5"
+            android:summary="@string/pref_vibration_power"
+            android:title="@string/pref_title_vibration_power" />
+
+        </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="Alarm Check"
+        android:title="@string/pref_header_alarm_check" >
+
+        <ListPreference
+            android:dialogTitle="@string/pref_title_night"
+            android:entries="@array/pref_array_night"
+            android:entryValues="@array/pref_array_night_values"
+            android:key="night"
+            android:defaultValue="7"
+            android:summary="@string/pref_night"
+            android:title="@string/pref_title_night" />
+
+        <ListPreference
+            android:dialogTitle="@string/pref_title_day"
+            android:entries="@array/pref_array_day"
+            android:entryValues="@array/pref_array_day_values"
+            android:key="day"
+            android:defaultValue="2"
+            android:summary="@string/pref_day"
+            android:title="@string/pref_title_day" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
